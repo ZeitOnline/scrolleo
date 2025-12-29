@@ -3,22 +3,23 @@ declare function scrollama(): scrollama.ScrollamaInstance;
 
 declare namespace scrollama {
 
-  export type DecimalType = 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
-
   export type ScrollamaOptions = {
     step: NodeList | HTMLElement[] | string;
+    parent?: HTMLElement | string;
+    offset?: number | string;
+    threshold?: number;
     progress?: boolean;
-    offset?: DecimalType;
-    threshold?: 1 | 2 | 3 | 4;
-    order?: boolean;
     once?: boolean;
     debug?: boolean;
+    container?: HTMLElement;
+    root?: HTMLElement | null;
   };
 
   export type ProgressCallbackResponse = {
     element: HTMLElement;
     index: number;
-    progress: DecimalType;
+    progress: number;
+    direction: "up" | "down";
   };
 
   export type CallbackResponse = {
@@ -40,7 +41,7 @@ declare namespace scrollama {
     resize: () => ScrollamaInstance;
     enable: () => ScrollamaInstance;
     disable: () => ScrollamaInstance;
-    destroy: () => void;
-    offsetTrigger: (value: [number, number]) => void;
+    destroy: () => ScrollamaInstance;
+    offset: (value?: number | string | null) => ScrollamaInstance | number;
   }
 }
