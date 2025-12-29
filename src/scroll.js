@@ -1,25 +1,18 @@
 let previousScrollY;
-let currentScrollY;
-let comparisonScrollY;
 let direction;
 
-function onScroll(container) {
+function updateScrollDirection(container) {
 	const scrollTop = container ? container.scrollTop : window.pageYOffset;
-
-	if (currentScrollY === scrollTop) return;
-
-	previousScrollY = currentScrollY;
-	currentScrollY = scrollTop;
-	if (currentScrollY > comparisonScrollY) direction = "down";
-	else if (currentScrollY < comparisonScrollY) direction = "up";
-	comparisonScrollY = currentScrollY;
+	if (previousScrollY === scrollTop) return;
+	
+	if (scrollTop > previousScrollY) direction = "down";
+	else if (scrollTop < previousScrollY) direction = "up";
+	previousScrollY = scrollTop;
 }
 
-function setupScroll(container) {
+function setupScrollListener(container) {
 	previousScrollY = 0;
-	currentScrollY = 0;
-	comparisonScrollY = 0;
-	document.addEventListener("scroll", () => onScroll(container), { passive: true });
+	document.addEventListener("scroll", () => updateScrollDirection(container), { passive: true });
 }
 
-export { setupScroll, onScroll, direction, previousScrollY, currentScrollY };
+export { setupScrollListener, updateScrollDirection, direction };
