@@ -19,7 +19,7 @@ function setupScroll(container) {
 	previousScrollY = 0;
 	currentScrollY = 0;
 	comparisonScrollY = 0;
-	document.addEventListener("scroll", () => onScroll(container));
+	document.addEventListener("scroll", () => onScroll(container), { passive: true });
 }
 
 export { setupScroll, onScroll, direction, previousScrollY, currentScrollY };
