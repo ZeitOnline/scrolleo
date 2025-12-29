@@ -52,55 +52,13 @@ function scrollama() {
 		if (step.state === "enter") cb.stepProgress(response);
 	}
 
-	function notifyOthers(index, location) {
-		console.log(index, location, direction, currentScrollY, previousScrollY);
-		if (location === "above") {
-			let i = direction === "down" ? 0 : index - 1;
-			let end = direction === "down" ? i < index : i >= 0;
-			let inc = direction === "down" ? 1 : -1;
-			for (i; end; inc) {
-				const step = steps[i];
-				console.log(
-					Object.keys(step)
-						.map((p) => `${p} - ${step[p]}`)
-						.join("\n ")
-				);
-				if (direction === "down") {
-					if (step.state !== "enter" && step.direction !== "down") {
-						notifyStepEnter(step.node, false);
-						notifyStepExit(step.node, false);
-					} else if (step.state === "enter") notifyStepExit(step.node, false);
-				} else if (direction === "up") {
-					if (step.state !== "enter" && step.direction === "down") {
-						notifyStepEnter(step.node, false);
-						notifyStepExit(step.node, false);
-					} else if (step.state === "enter") notifyStepExit(step.node, false);
-				}
-			}
-		} else if (location === "below") {
-			for (let i = steps.length - 1; i > index; i -= 1) {
-				const step = steps[i];
-				if (step.state === "enter") notifyStepExit(step.node);
-				if (step.direction === "down") {
-					notifyStepEnter(step.node, false);
-					notifyStepExit(step.node, false);
-				}
-			}
-		}
-	}
-
-	function notifyStepEnter(element, check = true) {
+	function notifyStepEnter(element) {
 		const index = getIndex(element);
 		const step = steps[index];
 		const response = { element, index, direction };
 
 		step.direction = direction;
 		step.state = "enter";
-
-		// if (isPreserveOrder && check && direction !== "up")
-		//   notifyOthers(index, "above");
-		// if (isPreserveOrder && check && direction === "up")
-		//   notifyOthers(index, "below");
 
 		if (!exclude[index]) cb.stepEnter(response);
 		if (isTriggerOnce) exclude[index] = true;
