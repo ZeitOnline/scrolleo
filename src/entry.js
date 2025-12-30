@@ -7,7 +7,7 @@ import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
 import getOffsetTop from "./getOffsetTop";
-import { setupScrollListener, direction, updateScrollDirection } from "./scroll";
+import { addScrollListener, direction, updateScrollDirection, removeScrollListener } from "./scroll";
 
 function scrollama() {
 	let cb = {};
@@ -201,7 +201,7 @@ function scrollama() {
 		root = null
 	}) => {
 
-		setupScrollListener(container);
+		addScrollListener(container);
 
 		steps = selectAll(step, parent).map((node, index) => ({
 			index,
@@ -247,6 +247,7 @@ function scrollama() {
 	S.destroy = () => {
 		handleEnable(false);
 		reset();
+		removeScrollListener(containerElement);
 		return S;
 	};
 
