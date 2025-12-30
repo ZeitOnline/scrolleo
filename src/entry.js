@@ -1,13 +1,11 @@
 import { selectAll } from "./dom";
 import * as bug from "./debug";
-import generateId from "./generateId";
 import err from "./err";
 import getIndex from "./getIndex";
-import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
 import getOffsetTop from "./getOffsetTop";
-import { addScrollListener, direction, removeScrollListener } from "./scroll";
+import generateId from "./generateId";
 
 function scrollama() {
 	let cb = {};
@@ -17,9 +15,6 @@ function scrollama() {
 	let globalOffset;
 	let containerElement;
 	let rootElement;
-	
-	let resizeObserver;
-	let progressThreshold = 0;
 
 	let isEnabled = false;
 	let isProgress = false;
@@ -28,19 +23,38 @@ function scrollama() {
 
 	let exclude = [];
 
+	// Track visible steps and local state
+	let visibleIndex = [];
+	let viewportObserver;
+	let resizeObserver;
+	let previousY = 0;
+	let currentDirection = "down";
+
 	/* HELPERS */
 	function reset() {
 		cb = {
-			stepEnter: () => { },
-			stepExit: () => { },
-			stepProgress: () => { },
+			stepEnter: () => {},
+			stepExit: () => {},
+			stepProgress: () => {},
 		};
 		exclude = [];
+		visibleIndex = [];
+	}
+
+	function getScrollTop() {
+		return containerElement === window ? window.pageYOffset : containerElement.scrollTop
 	}
 
 	function handleEnable(shouldEnable) {
-		if (shouldEnable && !isEnabled) initializeObservers();
-		if (!shouldEnable && isEnabled) disconnectAllObservers();
+		if (shouldEnable && !isEnabled) {
+			// Sync initial scroll position
+			previousY = getScrollTop();
+			initializeObservers();
+		}
+		if (!shouldEnable && isEnabled) {
+			disconnectAllObservers();
+			containerElement.removeEventListener("scroll", handleScroll);
+		}
 		isEnabled = shouldEnable;
 	}
 
@@ -49,37 +63,36 @@ function scrollama() {
 		const index = getIndex(element);
 		const step = steps[index];
 		if (progress !== undefined) step.progress = progress;
-		const response = { element, index, progress, direction };
+		const response = { element, index, progress, direction: currentDirection };
 		if (step.state === "enter") cb.stepProgress(response);
 	}
 
 	function notifyStepEnter(element) {
 		const index = getIndex(element);
 		const step = steps[index];
-		const response = { element, index, direction };
+		const response = { element, index, direction: currentDirection };
 
-		step.direction = direction;
 		step.state = "enter";
 
 		if (!exclude[index]) cb.stepEnter(response);
 		if (isTriggerOnce) exclude[index] = true;
 	}
 
-	function notifyStepExit(element, check = true) {
+	function notifyStepExit(element) {
 		const index = getIndex(element);
 		const step = steps[index];
 
 		if (!step.state) return false;
 
-		const response = { element, index, direction };
+		const response = { element, index, direction: currentDirection };
 
 		if (isProgress) {
-			if (direction === "down" && step.progress < 1) notifyProgress(element, 1);
-			else if (direction === "up" && step.progress > 0)
+			if (currentDirection === "down" && step.progress < 1)
+				notifyProgress(element, 1);
+			else if (currentDirection === "up" && step.progress > 0)
 				notifyProgress(element, 0);
 		}
 
-		step.direction = direction;
 		step.state = "exit";
 
 		cb.stepExit(response);
@@ -93,36 +106,89 @@ function scrollama() {
 			const h = entry.target.offsetHeight;
 			if (h !== step.height) {
 				step.height = h;
-				disconnectStepObservers(step);
-				addStepObservers(step, isProgress);
 			}
 		});
 	}
 
-	function intersectStep([entry]) {		
-		const { isIntersecting, target } = entry;
-		if (isIntersecting) notifyStepEnter(target);
-		else notifyStepExit(target);
+	function intersectViewport(entries) {
+		const wasEmpty = visibleIndex.length === 0;
+		entries.forEach((entry) => {
+			const index = getIndex(entry.target);
+			if (entry.isIntersecting) {
+				if (!visibleIndex.includes(index)) visibleIndex.push(index);
+			} else {
+				visibleIndex = visibleIndex.filter((i) => i !== index);
+				const step = steps[index];
+				if (step.state === "enter") notifyStepExit(step.node);
+			}
+		});
+
+		const isEmpty = visibleIndex.length === 0;
+		if (isEnabled) {
+			if (wasEmpty && !isEmpty) {
+				// Steps entered the buffer: start listening to scroll
+				previousY = getScrollTop();
+				containerElement.addEventListener("scroll", handleScroll);
+				if (isDebug) {
+					console.log(`enabling scroll listener (steps in buffer: ${visibleIndex.length})`);
+				}
+			} else if (!wasEmpty && isEmpty) {
+				// No steps in buffer: stop listening to scroll
+				containerElement.removeEventListener("scroll", handleScroll);
+				if (isDebug) {
+					console.log(`disabling scroll listener`);
+				}
+			}
+		}
 	}
 
-	function intersectProgress([entry]) {
-		const index = getIndex(entry.target);
-		const step = steps[index];
-		const { isIntersecting, intersectionRatio, target } = entry;
-		if (isIntersecting && step.state === "enter")
-			notifyProgress(target, intersectionRatio);
-	}
+	function handleScroll() {
+		if (!isEnabled) return;
 
-	/*  OBSERVERS - CREATION */
-	function disconnectStepObservers({ observers }) {
-		Object.keys(observers).map((name) => {
-			observers[name].disconnect();
+		// Calculate direction locally
+		const currentY = getScrollTop();
+		if (currentY !== previousY) {
+			currentDirection = currentY > previousY ? "down" : "up";
+			previousY = currentY;
+		}
+
+		// Only check steps that are roughly in view
+		visibleIndex.forEach((index) => {
+			checkStep(steps[index]);
 		});
 	}
 
+	function checkStep(step) {
+		const { height, node, offset } = step;
+		const rect = node.getBoundingClientRect();
+
+		const h = window.innerHeight;
+		const off = offset || globalOffset;
+		const factor = off.format === "pixels" ? 1 : h;
+		const thresholdPx = off.value * factor;
+
+		// Check if the trigger point is within the element
+		const isOver = rect.top <= thresholdPx && rect.bottom >= thresholdPx;
+
+		if (isOver && step.state !== "enter") {
+			notifyStepEnter(node);
+		} else if (!isOver && step.state === "enter") {
+			notifyStepExit(node);
+		}
+
+		if (isProgress && step.state === "enter") {
+			const progress = Math.min(
+				1,
+				Math.max(0, (thresholdPx - rect.top) / height)
+			);
+			notifyProgress(node, progress);
+		}
+	}
+
+	/*  OBSERVERS - CREATION */
 	function disconnectAllObservers() {
-		steps.forEach(disconnectStepObservers);
 		if (resizeObserver) resizeObserver.disconnect();
+		if (viewportObserver) viewportObserver.disconnect();
 	}
 
 	function addResizeObserver() {
@@ -130,52 +196,19 @@ function scrollama() {
 		steps.forEach((step) => resizeObserver.observe(step.node));
 	}
 
-	function addStepObservers(step, isProgress) {
-		addStepIntersectionObserver(step);
-		if (isProgress) addProgressIntersectionObserver(step);
-	}
+	function addViewportObserver() {
+		// add a buffer to ensure steps are detected before they hit the threshold
+		const rootMargin = "50% 0px 50% 0px";
+		const options = { rootMargin, threshold: 0, root: rootElement };
+		viewportObserver = new IntersectionObserver(intersectViewport, options);
 
-	function addStepIntersectionObserver(step) {
-		const h = window.innerHeight;
-		const off = step.offset || globalOffset;
-		const factor = off.format === "pixels" ? 1 : h;
-		const offset = off.value * factor;
-		const marginTop = step.height / 2 - offset;
-		const marginBottom = step.height / 2 - (h - offset);
-		const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
-		const root = rootElement;
-
-		const threshold = 0.5;
-		const options = { rootMargin, threshold, root };
-		const observer = new IntersectionObserver(intersectStep, options);
-
-		observer.observe(step.node);
-		step.observers.step = observer;
-
-		if (isDebug) bug.update({ id, step, marginTop, marginBottom });
-	}
-
-	function addProgressIntersectionObserver(step) {
-		const h = window.innerHeight;
-		const off = step.offset || globalOffset;
-		const factor = off.format === "pixels" ? 1 : h;
-		const offset = off.value * factor;
-		const marginTop = -offset + step.height;
-		const marginBottom = offset - h;
-		const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
-
-		const threshold = createProgressThreshold(step.height, progressThreshold);
-		const options = { rootMargin, threshold };
-		const observer = new IntersectionObserver(intersectProgress, options);
-
-		observer.observe(step.node);
-		step.observers.progress = observer;
+		steps.forEach((step) => viewportObserver.observe(step.node));
 	}
 
 	function initializeObservers() {
 		disconnectAllObservers();
 		addResizeObserver();
-		steps.forEach((step) => addStepObservers(step, isProgress));
+		addViewportObserver();
 	}
 
 	/* SETUP */
@@ -185,21 +218,16 @@ function scrollama() {
 		step,
 		parent,
 		offset = 0.5,
-		threshold = 4,
 		progress = false,
 		once = false,
 		debug = false,
 		container = undefined,
-		root = null
+		root = null,
 	}) => {
-		addScrollListener(container);
-
 		steps = selectAll(step, parent).map((node, index) => ({
 			index,
-			direction: undefined,
 			height: node.offsetHeight,
 			node,
-			observers: {},
 			offset: parseOffset(node.dataset.offset),
 			top: getOffsetTop(node),
 			progress: 0,
@@ -214,9 +242,8 @@ function scrollama() {
 		isProgress = progress;
 		isTriggerOnce = once;
 		isDebug = debug;
-		progressThreshold = Math.max(1, +threshold);
 		globalOffset = parseOffset(offset);
-		containerElement = container;
+		containerElement = container || window;
 		rootElement = root;
 
 		reset();
@@ -238,7 +265,6 @@ function scrollama() {
 	S.destroy = () => {
 		handleEnable(false);
 		reset();
-		removeScrollListener(containerElement);
 		return S;
 	};
 
@@ -250,7 +276,6 @@ function scrollama() {
 	S.offset = (x) => {
 		if (x === null || x === undefined) return globalOffset.value;
 		globalOffset = parseOffset(x);
-		initializeObservers();
 		return S;
 	};
 
