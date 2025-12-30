@@ -56,4 +56,4 @@ function removeScrollListener(container) {
 	}
 }
 
-export { addScrollListener, updateScrollDirection, removeScrollListener, direction };
+export { addScrollListener, removeScrollListener, direction };

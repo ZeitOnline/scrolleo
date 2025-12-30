@@ -7,7 +7,7 @@ import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
 import getOffsetTop from "./getOffsetTop";
-import { addScrollListener, direction, removeScrollListener, updateScrollDirection } from "./scroll";
+import { addScrollListener, direction, removeScrollListener } from "./scroll";
 
 function scrollama() {
 	let cb = {};
@@ -99,9 +99,7 @@ function scrollama() {
 		});
 	}
 
-	function intersectStep([entry]) {
-		updateScrollDirection(containerElement);
-		
+	function intersectStep([entry]) {		
 		const { isIntersecting, target } = entry;
 		if (isIntersecting) notifyStepEnter(target);
 		else notifyStepExit(target);
