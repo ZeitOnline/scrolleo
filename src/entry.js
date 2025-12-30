@@ -7,7 +7,7 @@ import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
 import getOffsetTop from "./getOffsetTop";
-import { addScrollListener, direction, updateScrollDirection, removeScrollListener } from "./scroll";
+import { addScrollListener, direction, removeScrollListener, updateScrollDirection } from "./scroll";
 
 function scrollama() {
 	let cb = {};
@@ -17,7 +17,8 @@ function scrollama() {
 	let globalOffset;
 	let containerElement;
 	let rootElement;
-
+	
+	let resizeObserver;
 	let progressThreshold = 0;
 
 	let isEnabled = false;
@@ -38,8 +39,8 @@ function scrollama() {
 	}
 
 	function handleEnable(shouldEnable) {
-		if (shouldEnable && !isEnabled) updateObservers();
-		if (!shouldEnable && isEnabled) disconnectObservers();
+		if (shouldEnable && !isEnabled) initializeObservers();
+		if (!shouldEnable && isEnabled) disconnectAllObservers();
 		isEnabled = shouldEnable;
 	}
 
@@ -85,21 +86,22 @@ function scrollama() {
 	}
 
 	/* OBSERVERS - HANDLING */
-	function resizeStep([entry]) {
-		const index = getIndex(entry.target);
-		const step = steps[index];
-		const h = entry.target.offsetHeight;
-		if (h !== step.height) {
-			step.height = h;
-			disconnectObserver(step);
-			updateStepObserver(step);
-			updateResizeObserver(step);
-		}
+	function resizeStep(entries) {
+		entries.forEach((entry) => {
+			const index = getIndex(entry.target);
+			const step = steps[index];
+			const h = entry.target.offsetHeight;
+			if (h !== step.height) {
+				step.height = h;
+				disconnectStepObservers(step);
+				addStepObservers(step, isProgress);
+			}
+		});
 	}
 
 	function intersectStep([entry]) {
 		updateScrollDirection(containerElement);
-
+		
 		const { isIntersecting, target } = entry;
 		if (isIntersecting) notifyStepEnter(target);
 		else notifyStepExit(target);
@@ -114,27 +116,28 @@ function scrollama() {
 	}
 
 	/*  OBSERVERS - CREATION */
-	function disconnectObserver({ observers }) {
+	function disconnectStepObservers({ observers }) {
 		Object.keys(observers).map((name) => {
 			observers[name].disconnect();
 		});
 	}
 
-	function disconnectObservers() {
-		steps.forEach(disconnectObserver);
+	function disconnectAllObservers() {
+		steps.forEach(disconnectStepObservers);
+		if (resizeObserver) resizeObserver.disconnect();
 	}
 
-	function updateResizeObserver(step) {
-		const observer = new ResizeObserver(resizeStep);
-		observer.observe(step.node);
-		step.observers.resize = observer;
+	function addResizeObserver() {
+		resizeObserver = new ResizeObserver(resizeStep);
+		steps.forEach((step) => resizeObserver.observe(step.node));
 	}
 
-	function updateResizeObservers() {
-		steps.forEach(updateResizeObserver);
+	function addStepObservers(step, isProgress) {
+		addStepIntersectionObserver(step);
+		if (isProgress) addProgressIntersectionObserver(step);
 	}
 
-	function updateStepObserver(step) {
+	function addStepIntersectionObserver(step) {
 		const h = window.innerHeight;
 		const off = step.offset || globalOffset;
 		const factor = off.format === "pixels" ? 1 : h;
@@ -154,11 +157,7 @@ function scrollama() {
 		if (isDebug) bug.update({ id, step, marginTop, marginBottom });
 	}
 
-	function updateStepObservers() {
-		steps.forEach(updateStepObserver);
-	}
-
-	function updateProgressObserver(step) {
+	function addProgressIntersectionObserver(step) {
 		const h = window.innerHeight;
 		const off = step.offset || globalOffset;
 		const factor = off.format === "pixels" ? 1 : h;
@@ -175,15 +174,10 @@ function scrollama() {
 		step.observers.progress = observer;
 	}
 
-	function updateProgressObservers() {
-		steps.forEach(updateProgressObserver);
-	}
-
-	function updateObservers() {
-		disconnectObservers();
-		updateResizeObservers();
-		updateStepObservers();
-		if (isProgress) updateProgressObservers();
+	function initializeObservers() {
+		disconnectAllObservers();
+		addResizeObserver();
+		steps.forEach((step) => addStepObservers(step, isProgress));
 	}
 
 	/* SETUP */
@@ -200,7 +194,6 @@ function scrollama() {
 		container = undefined,
 		root = null
 	}) => {
-
 		addScrollListener(container);
 
 		steps = selectAll(step, parent).map((node, index) => ({
@@ -252,14 +245,14 @@ function scrollama() {
 	};
 
 	S.resize = () => {
-		updateObservers();
+		initializeObservers();
 		return S;
 	};
 
 	S.offset = (x) => {
 		if (x === null || x === undefined) return globalOffset.value;
 		globalOffset = parseOffset(x);
-		updateObservers();
+		initializeObservers();
 		return S;
 	};
 
