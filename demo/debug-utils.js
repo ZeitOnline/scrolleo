@@ -1,6 +1,6 @@
 /**
  * Debug Toggle Utility
- * Provides functionality to toggle scrollama debug overlay via URL param or UI button
+ * Provides functionality to toggle scrolleo debug overlay via URL param or UI button
  */
 
 function createDebugToggle(scroller, setupOptions, eventHandlers) {
@@ -28,7 +28,7 @@ function createDebugToggle(scroller, setupOptions, eventHandlers) {
 		}
 	}
 
-	// Re-setup scrollama with current handlers
+	// Re-setup scrolleo with current handlers
 	function reSetupWithHandlers(debugValue) {
 		const newOptions = { ...setupOptions, debug: debugValue };
 		scroller.setup(newOptions);

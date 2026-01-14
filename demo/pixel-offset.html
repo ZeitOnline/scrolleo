@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Pixel Offset</title>
+		<title>Scrolleo Demo: Pixel Offset</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Pixel-based offset customization"
+			content="Scrolleo Demo: Pixel-based offset customization"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -146,7 +146,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -212,14 +212,14 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			const scrolly = document.querySelector('#scrolly');
 			const article = scrolly.querySelector('article');
 			const steps = article.querySelectorAll('.step');
 
-			// Initialize scrollama
-			const scroller = scrollama();
+			// Initialize scrolleo
+			const scroller = scrolleo();
 
 			// Setup options - using a default pixel offset
 			// Each step can override with data-offset attribute
@@ -256,7 +256,7 @@
 				updateTriggerLine();
 				window.addEventListener('resize', updateTriggerLine);
 
-				// Setup scrollama
+				// Setup scrolleo
 				scroller
 					.setup(setupOptions)
 					.onStepEnter(handleStepEnter)

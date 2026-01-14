@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Sticky Side</title>
+		<title>Scrolleo Demo: Sticky Side</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Sticky graphic on side with scrolling text"
+			content="Scrolleo Demo: Sticky graphic on side with scrolling text"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -74,7 +74,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -119,7 +119,7 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			const main = document.querySelector('main');
 			const scrolly = main.querySelector('#scrolly');
@@ -127,8 +127,8 @@
 			const article = scrolly.querySelector('article');
 			const steps = article.querySelectorAll('.step');
 
-			// Initialize scrollama
-			const scroller = scrollama();
+			// Initialize scrolleo
+			const scroller = scrolleo();
 
 			// Setup options
 			const setupOptions = {
@@ -151,7 +151,7 @@
 				figure.style.height = figureHeight + 'px';
 				figure.style.top = figureMarginTop + 'px';
 
-				// Tell scrollama to update new element dimensions
+				// Tell scrolleo to update new element dimensions
 				scroller.resize();
 			}
 
@@ -180,7 +180,7 @@
 				// Force a resize on load to ensure proper dimensions
 				handleResize();
 
-				// Setup scrollama
+				// Setup scrolleo
 				scroller.setup(setupOptions).onStepEnter(handleStepEnter);
 
 				// Setup resize event

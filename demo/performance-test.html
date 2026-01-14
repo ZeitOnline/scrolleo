@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Performance Test</title>
+		<title>Scrolleo Demo: Performance Test</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Performance monitoring with multiple instances"
+			content="Scrolleo Demo: Performance monitoring with multiple instances"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -154,7 +154,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -171,7 +171,7 @@
 			<section id="intro">
 				<h1 class="intro__hed">Performance Test</h1>
 				<p class="intro__dek">
-					This demo tests scrollama performance with multiple instances and many
+					This demo tests scrolleo performance with multiple instances and many
 					steps. Monitor FPS, frame time, and callback rates in real-time.
 				</p>
 			</section>
@@ -228,7 +228,7 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			// Performance monitoring
 			const perfMonitor = {
@@ -363,15 +363,15 @@
 			const scrollers = [];
 			let activeStepsCount = 0;
 
-			function initScrollama() {
+			function initScrolleo() {
 				// Generate all steps
 				for (let i = 1; i <= CONFIG.numSections; i++) {
 					generateSteps(`container-${i}`, i);
 				}
 
-				// Create scrollama instances for each section
+				// Create scrolleo instances for each section
 				for (let i = 1; i <= CONFIG.numSections; i++) {
-					const scroller = scrollama();
+					const scroller = scrolleo();
 					const setupOptions = {
 						step: `#container-${i} .step`,
 						progress: true,
@@ -446,7 +446,7 @@
 				}
 
 				console.log(`Performance test initialized:`);
-				console.log(`- ${CONFIG.numSections} scrollama instances`);
+				console.log(`- ${CONFIG.numSections} scrolleo instances`);
 				console.log(
 					`- ${CONFIG.numSections * CONFIG.stepsPerSection} total steps`
 				);
@@ -456,11 +456,11 @@
 			// Initialize performance monitoring
 			perfMonitor.init();
 
-			// Initialize scrollama after DOM is ready
+			// Initialize scrolleo after DOM is ready
 			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', initScrollama);
+				document.addEventListener('DOMContentLoaded', initScrolleo);
 			} else {
-				initScrollama();
+				initScrolleo();
 			}
 		</script>
 	</body>

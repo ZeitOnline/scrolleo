@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Basic</title>
+		<title>Scrolleo Demo: Basic</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Basic step enter/exit functionality"
+			content="Scrolleo Demo: Basic step enter/exit functionality"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -43,7 +43,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -82,14 +82,14 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			const scrolly = document.querySelector('#scrolly');
 			const article = scrolly.querySelector('article');
 			const steps = article.querySelectorAll('.step');
 
-			// Initialize scrollama
-			const scroller = scrollama();
+			// Initialize scrolleo
+			const scroller = scrolleo();
 
 			// Setup options
 			const setupOptions = {
@@ -118,7 +118,7 @@
 					step.style.padding = v + 'px 0px';
 				});
 
-				// Setup scrollama
+				// Setup scrolleo
 				scroller
 					.setup(setupOptions)
 					.onStepEnter(handleStepEnter)

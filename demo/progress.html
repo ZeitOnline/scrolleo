@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Progress</title>
+		<title>Scrolleo Demo: Progress</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Progress tracking with visual feedback"
+			content="Scrolleo Demo: Progress tracking with visual feedback"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -82,7 +82,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -121,7 +121,7 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			const scrolly = document.querySelector('#scrolly');
 			const article = scrolly.querySelector('article');
@@ -130,8 +130,8 @@
 			const progressValue = progressIndicator.querySelector('.progress-value');
 			const stepLabel = progressIndicator.querySelector('.step-label');
 
-			// Initialize scrollama
-			const scroller = scrollama();
+			// Initialize scrolleo
+			const scroller = scrolleo();
 
 			// Setup options
 			const setupOptions = {
@@ -185,7 +185,7 @@
 				// Set initial step heights before setup
 				resize();
 
-				// Setup scrollama
+				// Setup scrolleo
 				scroller
 					.setup(setupOptions)
 					.onStepEnter(handleStepEnter)

@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Scrollama Demo: Multiple Instances</title>
+		<title>Scrolleo Demo: Multiple Instances</title>
 		<meta
 			name="description"
-			content="Scrollama Demo: Multiple scrollama instances on one page"
+			content="Scrolleo Demo: Multiple scrolleo instances on one page"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
@@ -51,7 +51,7 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrollama.js</a>
+				<a href="index.html">scrolleo.js</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
@@ -68,7 +68,7 @@
 			<section id="intro">
 				<h1 class="intro__hed">Multiple Instances Example</h1>
 				<p class="intro__dek">
-					This page demonstrates multiple scrollama instances working
+					This page demonstrates multiple scrolleo instances working
 					independently.
 				</p>
 			</section>
@@ -102,7 +102,7 @@
 
 		<script src="debug-utils.js"></script>
 		<script type="module">
-			import scrollama from '../index.js';
+			import scrolleo from '../index.js';
 
 			const container = document.querySelector('#scroll');
 			const text = container.querySelector('.scroll__text');
@@ -112,8 +112,8 @@
 			const text2 = container2.querySelector('.scroll__text');
 			const steps2 = text2.querySelectorAll('.step');
 
-			const scroller = scrollama();
-			const scroller2 = scrollama();
+			const scroller = scrolleo();
+			const scroller2 = scrolleo();
 
 			// Setup options for first instance
 			const setupOptions1 = {
