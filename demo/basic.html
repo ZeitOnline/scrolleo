@@ -1,136 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Scrollama Demo: Basic</title>
-	<meta name="description" content="Scrollama Demo: Basic step enter/exit functionality" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="style.css" />
-	<style>
-		#scrolly {
-			position: relative;
-		}
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrollama Demo: Basic</title>
+		<meta
+			name="description"
+			content="Scrollama Demo: Basic step enter/exit functionality"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			#scrolly {
+				position: relative;
+			}
 
-		article {
-			position: relative;
-			padding: 0 1rem;
-			margin: 0 auto;
-			width: 33%;
-		}
+			article {
+				position: relative;
+				padding: 0 1rem;
+				margin: 0 auto;
+				width: 33%;
+			}
 
-		.step {
-			margin: 2rem auto 4rem auto;
-			background-color: var(--color-primary);
-			color: var(--color-white);
-		}
+			.step {
+				margin: 2rem auto 4rem auto;
+				background-color: var(--color-primary);
+				color: var(--color-white);
+			}
 
-		.step.is-active {
-			background-color: var(--color-accent);
-			color: var(--color-primary);
-		}
+			.step.is-active {
+				background-color: var(--color-accent);
+				color: var(--color-primary);
+			}
 
-		.step p {
-			text-align: center;
-			padding: 1rem;
-			font-size: var(--font-size-lg);
-		}
-	</style>
-</head>
-<body>
-	<main>
-		<nav>
-			<a href="index.html">scrollama.js</a>
-			<div class="nav__examples">
-				<p>Examples:</p>
-				<a href="basic.html">Basic</a>
-				<a href="progress.html">Progress</a>
-				<a href="sticky-side.html">Sticky Side</a>
-				<a href="sticky-overlay.html">Sticky Overlay</a>
-				<a href="percentage-offset.html">Percentage Offset</a>
-				<a href="pixel-offset.html">Pixel Offset</a>
-				<a href="multiple.html">Multiple Instances</a>
-				<a href="scroll-parent.html">Nested Scroll Container</a>
-				<a href="performance-test.html">Performance Test</a>
-			</div>
-		</nav>
-		<section id="intro">
-			<h1 class="intro__hed">Basic Example</h1>
-			<p class="intro__dek">
-				Start scrolling to see how it works.
-			</p>
-		</section>
-		<section id="scrolly">
-			<article>
-				<div class="step" data-step="1">
-					<p>STEP 1</p>
+			.step p {
+				text-align: center;
+				padding: 1rem;
+				font-size: var(--font-size-lg);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">scrollama.js</a>
+				<div class="nav__examples">
+					<p>Examples:</p>
+					<a href="basic.html">Basic</a>
+					<a href="progress.html">Progress</a>
+					<a href="sticky-side.html">Sticky Side</a>
+					<a href="sticky-overlay.html">Sticky Overlay</a>
+					<a href="percentage-offset.html">Percentage Offset</a>
+					<a href="pixel-offset.html">Pixel Offset</a>
+					<a href="multiple.html">Multiple Instances</a>
+					<a href="scroll-parent.html">Nested Scroll Container</a>
+					<a href="performance-test.html">Performance Test</a>
 				</div>
-				<div class="step" data-step="2">
-					<p>STEP 2</p>
-				</div>
-				<div class="step" data-step="3">
-					<p>STEP 3</p>
-				</div>
-				<div class="step" data-step="4">
-					<p>STEP 4</p>
-				</div>
-			</article>
-		</section>
-		<section id="outro"></section>
-	</main>
+			</nav>
+			<section id="intro">
+				<h1 class="intro__hed">Basic Example</h1>
+				<p class="intro__dek">Start scrolling to see how it works.</p>
+			</section>
+			<section id="scrolly">
+				<article>
+					<div class="step" data-step="1">
+						<p>STEP 1</p>
+					</div>
+					<div class="step" data-step="2">
+						<p>STEP 2</p>
+					</div>
+					<div class="step" data-step="3">
+						<p>STEP 3</p>
+					</div>
+					<div class="step" data-step="4">
+						<p>STEP 4</p>
+					</div>
+				</article>
+			</section>
+			<section id="outro"></section>
+		</main>
 
-	<script src="../build/scrollama.js"></script>
-	<script src="debug-utils.js"></script>
-	<script>
-		const scrolly = document.querySelector("#scrolly");
-		const article = scrolly.querySelector("article");
-		const steps = article.querySelectorAll(".step");
+		<script src="../build/scrollama.js"></script>
+		<script src="debug-utils.js"></script>
+		<script>
+			const scrolly = document.querySelector('#scrolly');
+			const article = scrolly.querySelector('article');
+			const steps = article.querySelectorAll('.step');
 
-		// Initialize scrollama
-		const scroller = scrollama();
+			// Initialize scrollama
+			const scroller = scrollama();
 
-		// Setup options
-		const setupOptions = {
-			step: "#scrolly article .step",
-			debug: false,
-			offset: 0.5
-		};
+			// Setup options
+			const setupOptions = {
+				step: '#scrolly article .step',
+				debug: false,
+				offset: 0.5,
+			};
 
-		// Event handlers
-		function handleStepEnter(response) {
-			// response = { element, direction, index }
-			console.log(response);
-			response.element.classList.add("is-active");
-		}
+			// Event handlers
+			function handleStepEnter(response) {
+				// response = { element, direction, index }
+				console.log(response);
+				response.element.classList.add('is-active');
+			}
 
-		function handleStepExit(response) {
-			// response = { element, direction, index }
-			console.log(response);
-			response.element.classList.remove("is-active");
-		}
+			function handleStepExit(response) {
+				// response = { element, direction, index }
+				console.log(response);
+				response.element.classList.remove('is-active');
+			}
 
-		function init() {
-			// Set random padding for different step heights (not required)
-			steps.forEach((step) => {
-				const v = 100 + Math.floor((Math.random() * window.innerHeight) / 4);
-				step.style.padding = v + "px 0px";
-			});
+			function init() {
+				// Set random padding for different step heights (not required)
+				steps.forEach((step) => {
+					const v = 100 + Math.floor((Math.random() * window.innerHeight) / 4);
+					step.style.padding = v + 'px 0px';
+				});
 
-			// Setup scrollama
-			scroller
-				.setup(setupOptions)
-				.onStepEnter(handleStepEnter)
-				.onStepExit(handleStepExit);
+				// Setup scrollama
+				scroller
+					.setup(setupOptions)
+					.onStepEnter(handleStepEnter)
+					.onStepExit(handleStepExit);
 
-			// Create debug toggle with event handlers
-			createDebugToggle(scroller, setupOptions, {
-				onStepEnter: handleStepEnter,
-				onStepExit: handleStepExit
-			});
-		}
+				// Create debug toggle with event handlers
+				createDebugToggle(scroller, setupOptions, {
+					onStepEnter: handleStepEnter,
+					onStepExit: handleStepExit,
+				});
+			}
 
-		// Initialize
-		init();
-	</script>
-</body>
+			// Initialize
+			init();
+		</script>
+	</body>
 </html>

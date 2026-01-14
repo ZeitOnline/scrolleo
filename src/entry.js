@@ -1,13 +1,17 @@
-import { selectAll } from "./dom";
-import * as bug from "./debug";
-import generateId from "./generateId";
-import err from "./err";
-import getIndex, { setIndex } from "./getIndex";
-import createProgressThreshold from "./createProgressThreshold";
-import parseOffset from "./parseOffset";
-import indexSteps from "./indexSteps";
-import getOffsetTop from "./getOffsetTop";
-import { addScrollListener, getDirection, removeScrollListener } from "./scroll";
+import { selectAll } from './dom';
+import * as bug from './debug';
+import generateId from './generateId';
+import err from './err';
+import getIndex, { setIndex } from './getIndex';
+import createProgressThreshold from './createProgressThreshold';
+import parseOffset from './parseOffset';
+import indexSteps from './indexSteps';
+import getOffsetTop from './getOffsetTop';
+import {
+	addScrollListener,
+	getDirection,
+	removeScrollListener,
+} from './scroll';
 
 function scrollama() {
 	let cb = {};
@@ -17,7 +21,7 @@ function scrollama() {
 	let globalOffset;
 	let containerElement;
 	let rootElement;
-	
+
 	let resizeObserver;
 	let progressThreshold = 0;
 
@@ -39,9 +43,9 @@ function scrollama() {
 	/* HELPERS */
 	function reset() {
 		cb = {
-			stepEnter: () => { },
-			stepExit: () => { },
-			stepProgress: () => { },
+			stepEnter: () => {},
+			stepExit: () => {},
+			stepProgress: () => {},
 		};
 		exclude = [];
 		pendingProgressCallbacks.clear();
@@ -58,15 +62,17 @@ function scrollama() {
 
 	function flushProgressCallbacks() {
 		rafScheduled = false;
-		pendingProgressCallbacks.forEach(({ element, index, progress, direction, step }) => {
-			// Update step progress value
-			step.progress = progress;
-			// Execute callback if step is in enter state
-			if (step.state === "enter") {
-				const response = { element, index, progress, direction };
-				cb.stepProgress(response);
+		pendingProgressCallbacks.forEach(
+			({ element, index, progress, direction, step }) => {
+				// Update step progress value
+				step.progress = progress;
+				// Execute callback if step is in enter state
+				if (step.state === 'enter') {
+					const response = { element, index, progress, direction };
+					cb.stepProgress(response);
+				}
 			}
-		});
+		);
 		pendingProgressCallbacks.clear();
 	}
 
@@ -74,14 +80,14 @@ function scrollama() {
 		const index = getIndex(element);
 		const step = steps[index];
 		const currentDirection = getDirection(containerElement);
-		
+
 		// Store the latest progress update for this step
 		pendingProgressCallbacks.set(index, {
 			element,
 			index,
 			progress,
 			direction: currentDirection,
-			step
+			step,
 		});
 
 		// Schedule requestAnimationFrame if not already scheduled
@@ -104,7 +110,7 @@ function scrollama() {
 		const response = { element, index, direction: currentDirection };
 
 		step.direction = currentDirection;
-		step.state = "enter";
+		step.state = 'enter';
 
 		if (!exclude[index]) cb.stepEnter(response);
 		if (isTriggerOnce) exclude[index] = true;
@@ -120,13 +126,14 @@ function scrollama() {
 		const response = { element, index, direction: currentDirection };
 
 		if (isProgress) {
-			if (currentDirection === "down" && step.progress < 1) notifyProgress(element, 1);
-			else if (currentDirection === "up" && step.progress > 0)
+			if (currentDirection === 'down' && step.progress < 1)
+				notifyProgress(element, 1);
+			else if (currentDirection === 'up' && step.progress > 0)
 				notifyProgress(element, 0);
 		}
 
 		step.direction = currentDirection;
-		step.state = "exit";
+		step.state = 'exit';
 
 		cb.stepExit(response);
 	}
@@ -159,7 +166,7 @@ function scrollama() {
 		}
 	}
 
-	function intersectStep([entry]) {		
+	function intersectStep([entry]) {
 		const { isIntersecting, target } = entry;
 		if (isIntersecting) notifyStepEnter(target);
 		else notifyStepExit(target);
@@ -169,7 +176,7 @@ function scrollama() {
 		const index = getIndex(entry.target);
 		const step = steps[index];
 		const { isIntersecting, intersectionRatio, target } = entry;
-		if (isIntersecting && step.state === "enter")
+		if (isIntersecting && step.state === 'enter')
 			notifyProgress(target, intersectionRatio);
 	}
 
@@ -198,7 +205,7 @@ function scrollama() {
 	function addStepIntersectionObserver(step) {
 		const h = window.innerHeight;
 		const off = step.offset || globalOffset;
-		const factor = off.format === "pixels" ? 1 : h;
+		const factor = off.format === 'pixels' ? 1 : h;
 		const offset = off.value * factor;
 		const marginTop = step.height / 2 - offset;
 		const marginBottom = step.height / 2 - (h - offset);
@@ -218,7 +225,7 @@ function scrollama() {
 	function addProgressIntersectionObserver(step) {
 		const h = window.innerHeight;
 		const off = step.offset || globalOffset;
-		const factor = off.format === "pixels" ? 1 : h;
+		const factor = off.format === 'pixels' ? 1 : h;
 		const offset = off.value * factor;
 		const marginTop = -offset + step.height;
 		const marginBottom = offset - h;
@@ -250,7 +257,7 @@ function scrollama() {
 		once = false,
 		debug = false,
 		container = undefined,
-		root = null
+		root = null,
 	}) => {
 		addScrollListener(container);
 
@@ -274,7 +281,7 @@ function scrollama() {
 		}));
 
 		if (!steps.length) {
-			err("no step elements");
+			err('no step elements');
 			return S;
 		}
 
@@ -330,20 +337,20 @@ function scrollama() {
 	};
 
 	S.onStepEnter = (f) => {
-		if (typeof f === "function") cb.stepEnter = f;
-		else err("onStepEnter requires a function");
+		if (typeof f === 'function') cb.stepEnter = f;
+		else err('onStepEnter requires a function');
 		return S;
 	};
 
 	S.onStepExit = (f) => {
-		if (typeof f === "function") cb.stepExit = f;
-		else err("onStepExit requires a function");
+		if (typeof f === 'function') cb.stepExit = f;
+		else err('onStepExit requires a function');
 		return S;
 	};
 
 	S.onStepProgress = (f) => {
-		if (typeof f === "function") cb.stepProgress = f;
-		else err("onStepProgress requires a function");
+		if (typeof f === 'function') cb.stepProgress = f;
+		else err('onStepProgress requires a function');
 		return S;
 	};
 	return S;

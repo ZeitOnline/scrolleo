@@ -1,185 +1,210 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Scrollama Demo Gallery</title>
-	<meta name="description" content="Scrollama.js - Interactive demo gallery showcasing library capabilities" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="style.css" />
-	<style>
-		body {
-			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-			min-height: 100vh;
-		}
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrollama Demo Gallery</title>
+		<meta
+			name="description"
+			content="Scrollama.js - Interactive demo gallery showcasing library capabilities"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			body {
+				background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+				min-height: 100vh;
+			}
 
-		.hero {
-			text-align: center;
-			padding: var(--spacing-xl) var(--spacing-sm);
-			background: var(--color-white);
-			margin-bottom: var(--spacing-xl);
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-		}
+			.hero {
+				text-align: center;
+				padding: var(--spacing-xl) var(--spacing-sm);
+				background: var(--color-white);
+				margin-bottom: var(--spacing-xl);
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
 
-		.hero h1 {
-			font-size: 3rem;
-			margin-bottom: var(--spacing-sm);
-			color: var(--color-primary);
-		}
-
-		.hero p {
-			font-size: var(--font-size-lg);
-			color: var(--color-text-light);
-			max-width: 600px;
-			margin: 0 auto;
-		}
-
-		.demo-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-			gap: var(--spacing-md);
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: var(--spacing-md);
-		}
-
-		.demo-card {
-			background: var(--color-white);
-			border-radius: var(--border-radius);
-			padding: var(--spacing-md);
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-			transition: transform var(--transition), box-shadow var(--transition);
-			text-decoration: none;
-			color: inherit;
-			display: block;
-		}
-
-		.demo-card:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-		}
-
-		.demo-card h3 {
-			font-size: var(--font-size-lg);
-			margin-bottom: var(--spacing-xs);
-			color: var(--color-primary);
-		}
-
-		.demo-card p {
-			font-size: var(--font-size-base);
-			color: var(--color-text-light);
-			margin: 0;
-			line-height: 1.5;
-		}
-
-		.demo-card .demo-badge {
-			display: inline-block;
-			background: var(--color-accent);
-			color: var(--color-primary);
-			padding: 0.25rem 0.5rem;
-			border-radius: 4px;
-			font-size: 0.75rem;
-			font-weight: bold;
-			margin-top: var(--spacing-xs);
-		}
-
-		.section-title {
-			text-align: center;
-			font-size: var(--font-size-xl);
-			margin: var(--spacing-xl) 0 var(--spacing-md) 0;
-			color: var(--color-primary);
-		}
-
-		.tests-section {
-			margin-top: var(--spacing-xl);
-			padding-top: var(--spacing-xl);
-			border-top: 2px solid var(--color-bg);
-		}
-
-		.tests-section .demo-card {
-			opacity: 0.9;
-		}
-
-		.tests-section .demo-card:hover {
-			opacity: 1;
-		}
-
-		@media (max-width: 768px) {
 			.hero h1 {
-				font-size: 2rem;
+				font-size: 3rem;
+				margin-bottom: var(--spacing-sm);
+				color: var(--color-primary);
+			}
+
+			.hero p {
+				font-size: var(--font-size-lg);
+				color: var(--color-text-light);
+				max-width: 600px;
+				margin: 0 auto;
 			}
 
 			.demo-grid {
-				grid-template-columns: 1fr;
-				padding: var(--spacing-sm);
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: var(--spacing-md);
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: var(--spacing-md);
 			}
-		}
-	</style>
-</head>
-<body>
-	<main>
-		<nav>
-			<a href="index.html">scrollama.js</a>
-			<div class="nav__examples">
-				<p>Demo Gallery</p>
+
+			.demo-card {
+				background: var(--color-white);
+				border-radius: var(--border-radius);
+				padding: var(--spacing-md);
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				transition:
+					transform var(--transition),
+					box-shadow var(--transition);
+				text-decoration: none;
+				color: inherit;
+				display: block;
+			}
+
+			.demo-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+			}
+
+			.demo-card h3 {
+				font-size: var(--font-size-lg);
+				margin-bottom: var(--spacing-xs);
+				color: var(--color-primary);
+			}
+
+			.demo-card p {
+				font-size: var(--font-size-base);
+				color: var(--color-text-light);
+				margin: 0;
+				line-height: 1.5;
+			}
+
+			.demo-card .demo-badge {
+				display: inline-block;
+				background: var(--color-accent);
+				color: var(--color-primary);
+				padding: 0.25rem 0.5rem;
+				border-radius: 4px;
+				font-size: 0.75rem;
+				font-weight: bold;
+				margin-top: var(--spacing-xs);
+			}
+
+			.section-title {
+				text-align: center;
+				font-size: var(--font-size-xl);
+				margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+				color: var(--color-primary);
+			}
+
+			.tests-section {
+				margin-top: var(--spacing-xl);
+				padding-top: var(--spacing-xl);
+				border-top: 2px solid var(--color-bg);
+			}
+
+			.tests-section .demo-card {
+				opacity: 0.9;
+			}
+
+			.tests-section .demo-card:hover {
+				opacity: 1;
+			}
+
+			@media (max-width: 768px) {
+				.hero h1 {
+					font-size: 2rem;
+				}
+
+				.demo-grid {
+					grid-template-columns: 1fr;
+					padding: var(--spacing-sm);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">scrollama.js</a>
+				<div class="nav__examples">
+					<p>Demo Gallery</p>
+				</div>
+			</nav>
+
+			<section class="hero">
+				<h1>Scrollama.js Demo Gallery</h1>
+				<p>
+					Explore interactive examples showcasing the capabilities of
+					scrollama.js, a lightweight scrollytelling library using
+					IntersectionObserver.
+				</p>
+			</section>
+
+			<h2 class="section-title">Showcase Demos</h2>
+			<div class="demo-grid">
+				<a href="basic.html" class="demo-card">
+					<h3>Basic</h3>
+					<p>
+						Basic step enter/exit functionality. The foundation of scrollama.js.
+					</p>
+				</a>
+
+				<a href="progress.html" class="demo-card">
+					<h3>Progress</h3>
+					<p>
+						Track scroll progress through steps with visual feedback and
+						animations.
+					</p>
+				</a>
+
+				<a href="sticky-side.html" class="demo-card">
+					<h3>Sticky Side</h3>
+					<p>
+						Sticky graphic on the side with scrolling text - a common
+						scrollytelling pattern.
+					</p>
+				</a>
+
+				<a href="sticky-overlay.html" class="demo-card">
+					<h3>Sticky Overlay</h3>
+					<p>Sticky graphic overlay pattern with text scrolling over it.</p>
+				</a>
+
+				<a href="percentage-offset.html" class="demo-card">
+					<h3>Percentage Offset</h3>
+					<p>
+						Per-step offset customization using percentage values (0 = top, 0.5
+						= middle, 1 = bottom).
+					</p>
+				</a>
+
+				<a href="pixel-offset.html" class="demo-card">
+					<h3>Pixel Offset</h3>
+					<p>
+						Fixed pixel-based offsets that don't change with viewport height,
+						ideal for mobile devices.
+					</p>
+				</a>
+
+				<a href="multiple.html" class="demo-card">
+					<h3>Multiple Instances</h3>
+					<p>
+						Multiple scrollama instances working independently on the same page.
+					</p>
+				</a>
+
+				<a href="scroll-parent.html" class="demo-card">
+					<h3>Nested Scroll Container</h3>
+					<p>Use a nested scroll container instead of the window element.</p>
+				</a>
+
+				<a href="performance-test.html" class="demo-card">
+					<h3>Performance Test</h3>
+					<p>
+						Performance monitoring demo with multiple instances and progress
+						tracking.
+					</p>
+				</a>
 			</div>
-		</nav>
-
-		<section class="hero">
-			<h1>Scrollama.js Demo Gallery</h1>
-			<p>
-				Explore interactive examples showcasing the capabilities of scrollama.js,
-				a lightweight scrollytelling library using IntersectionObserver.
-			</p>
-		</section>
-
-		<h2 class="section-title">Showcase Demos</h2>
-		<div class="demo-grid">
-			<a href="basic.html" class="demo-card">
-				<h3>Basic</h3>
-				<p>Basic step enter/exit functionality. The foundation of scrollama.js.</p>
-			</a>
-
-			<a href="progress.html" class="demo-card">
-				<h3>Progress</h3>
-				<p>Track scroll progress through steps with visual feedback and animations.</p>
-			</a>
-
-			<a href="sticky-side.html" class="demo-card">
-				<h3>Sticky Side</h3>
-				<p>Sticky graphic on the side with scrolling text - a common scrollytelling pattern.</p>
-			</a>
-
-			<a href="sticky-overlay.html" class="demo-card">
-				<h3>Sticky Overlay</h3>
-				<p>Sticky graphic overlay pattern with text scrolling over it.</p>
-			</a>
-
-			<a href="percentage-offset.html" class="demo-card">
-				<h3>Percentage Offset</h3>
-				<p>Per-step offset customization using percentage values (0 = top, 0.5 = middle, 1 = bottom).</p>
-			</a>
-
-			<a href="pixel-offset.html" class="demo-card">
-				<h3>Pixel Offset</h3>
-				<p>Fixed pixel-based offsets that don't change with viewport height, ideal for mobile devices.</p>
-			</a>
-
-			<a href="multiple.html" class="demo-card">
-				<h3>Multiple Instances</h3>
-				<p>Multiple scrollama instances working independently on the same page.</p>
-			</a>
-
-			<a href="scroll-parent.html" class="demo-card">
-				<h3>Nested Scroll Container</h3>
-				<p>Use a nested scroll container instead of the window element.</p>
-			</a>
-
-			<a href="performance-test.html" class="demo-card">
-				<h3>Performance Test</h3>
-				<p>Performance monitoring demo with multiple instances and progress tracking.</p>
-			</a>
-		</div>
-	</main>
-</body>
+		</main>
+	</body>
 </html>

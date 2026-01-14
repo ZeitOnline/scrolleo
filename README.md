@@ -3,20 +3,25 @@
 **Scrollama** is a modern & lightweight JavaScript library for scrollytelling
 using
 [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
-in favor of scroll events. *Current version: 3.2.0*
+in favor of scroll events. _Current version: 3.2.0_
 
 ## 3.0
+
 #### Why 3.0?
+
 The core parts of the Scrollama code base are being refactored for 3.0 to simplfy and clarify the logic. The goal behind this to ease make future maintainance, bug fixing, and feature additions easier moving forward.
 
 #### New Fetaures
-* Built-in resize using resize observers.
-* Custom offsets on steps with data attributes
+
+- Built-in resize using resize observers.
+- Custom offsets on steps with data attributes
 
 #### Deprecated Features
-* the `order` option
+
+- the `order` option
 
 ## Important Changes
+
 - **Version 3.0.0+**: `order` has been deprecated.
 - **Version 2.0.0+**: `.onContainerEnter` and `.onContainerExit` have been deprecated in favor of CSS property `position: sticky;`. [How to use position sticky.](https://pudding.cool/process/scrollytelling-sticky/)
 - **Version 1.4.0+**: you must manually add the IntersectionObserver polyfill for cross-browser support. See [installation](https://github.com/russellsamora/scrollama#installation) for details.
@@ -54,6 +59,7 @@ with any library, or with no library at all._
   Embedding a Scrollama instance inside an iframe using `root` option
 
 ## Installation
+
 **Note: As of version 1.4.0, the IntersectionObserver polyfill has been removed from the build. You must include it yourself for cross-browser support.** Check [here](https://caniuse.com/#feat=intersectionobserver) to see if you need to include the polyfill.
 
 Old school (exposes the `scrollama` global):
@@ -71,8 +77,8 @@ npm install scrollama --save
 And then import/require it:
 
 ```js
-import scrollama from "scrollama"; // or...
-const scrollama = require("scrollama");
+import scrollama from 'scrollama'; // or...
+const scrollama = require('scrollama');
 ```
 
 ## How to use
@@ -100,15 +106,15 @@ const scroller = scrollama();
 
 // setup the instance, pass callback functions
 scroller
-  .setup({
-    step: ".step",
-  })
-  .onStepEnter((response) => {
-    // { element, index, direction }
-  })
-  .onStepExit((response) => {
-    // { element, index, direction }
-  });
+	.setup({
+		step: '.step',
+	})
+	.onStepEnter((response) => {
+		// { element, index, direction }
+	})
+	.onStepExit((response) => {
+		// { element, index, direction }
+	});
 ```
 
 ## API
@@ -117,17 +123,17 @@ scroller
 
 _options:_
 
-| Option  | Type | Description | Default |
-| --- | --- | --- | --- |
-| step | string or HTMLElement[] | **required**  Selector (or array of elements) for the step elements that will trigger changes. |
-| offset | number (0 - 1, or string with "px") | How far from the top of the viewport to trigger a step. | 0.5 |
-| progress | boolean | Whether to fire incremental step progress updates or not. | false |
-| threshold | number (1 or higher) | The granularity of the progress interval in pixels (smaller = more granular). | 4 |
-| once | boolean | Only trigger the step to enter once then remove listener. | false || 
-| debug | boolean | Whether to show visual debugging tools or not. | false |
-| parent | HTMLElement[] | Parent element for step selector (use if you steps are in shadow DOM). | undefined |
-| container | HTMLElement | Parent element for the scroll story (use if scrollama is nested in a HTML element with overflow set to `scroll` or `auto`) | undefined |
-| root | HTMLElement | The element that is used as the viewport for checking visibility of the target. Must be the ancestor of the target. Defaults to the browser viewport if not specified or if null. See more details about usage of root on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#intersection_observer_concepts_and_usage). | undefined |
+| Option    | Type                                | Description                                                                                                                                                                                                                                                                                                                                           | Default   |
+| --------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| step      | string or HTMLElement[]             | **required** Selector (or array of elements) for the step elements that will trigger changes.                                                                                                                                                                                                                                                         |
+| offset    | number (0 - 1, or string with "px") | How far from the top of the viewport to trigger a step.                                                                                                                                                                                                                                                                                               | 0.5       |
+| progress  | boolean                             | Whether to fire incremental step progress updates or not.                                                                                                                                                                                                                                                                                             | false     |
+| threshold | number (1 or higher)                | The granularity of the progress interval in pixels (smaller = more granular).                                                                                                                                                                                                                                                                         | 4         |
+| once      | boolean                             | Only trigger the step to enter once then remove listener.                                                                                                                                                                                                                                                                                             | false     |     |
+| debug     | boolean                             | Whether to show visual debugging tools or not.                                                                                                                                                                                                                                                                                                        | false     |
+| parent    | HTMLElement[]                       | Parent element for step selector (use if you steps are in shadow DOM).                                                                                                                                                                                                                                                                                | undefined |
+| container | HTMLElement                         | Parent element for the scroll story (use if scrollama is nested in a HTML element with overflow set to `scroll` or `auto`)                                                                                                                                                                                                                            | undefined |
+| root      | HTMLElement                         | The element that is used as the viewport for checking visibility of the target. Must be the ancestor of the target. Defaults to the browser viewport if not specified or if null. See more details about usage of root on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#intersection_observer_concepts_and_usage). | undefined |
 
 #### scrollama.onStepEnter(callback)
 
@@ -197,28 +203,31 @@ Removes all observers and callback functions.
 To override the offset passed in the options, set a custom offset for an individual element using data attributes. For example: `<div class="step" data-offset="0.25">` or `data-offset="100px"`.
 
 ## Scrollama In The Wild
-* [The Billionaire Playbook - ProPublica](https://www.propublica.org/article/the-billionaire-playbook-how-sports-owners-use-their-teams-to-avoid-millions-in-taxes)
-* [Women's Pockets are Inferior - The Pudding](https://pudding.cool/2018/08/pockets/)
-* [Trump approval rating - Politico](https://www.politico.com/interactives/2019/trump-approval-rating-polls/)
-* [How the opioid epidemic evolved - Washington Post](https://www.washingtonpost.com/graphics/2019/investigations/opioid-pills-overdose-analysis/)
-* [US Covid-19 deaths, explained in 8 charts and maps - Vox](https://www.vox.com/22252693/covid-19-deaths-us-who-died)
-* [Life After Death on Wikipedia - The Pudding](https://pudding.cool/2018/08/wiki-death/)
-* [YouTube With Me - YouTube](https://youtube.com/trends/articles/with-me-interactive/)
-* [Unchecked Power - ProPublica](https://projects.propublica.org/nypd-unchecked-power/) 
-* [Trump's environmental policies rule only part of America - Politico](https://www.politico.com/interactives/2018/trump-environmental-policies-rollbacks/)
-* [The story of New Zealand’s Covid-19 lockdown, in graphs - Stuff](https://interactives.stuff.co.nz/2020/05/coronavirus-covid-19-data-new-zealand/)
-* [Trump and Biden's Paths to Victory in the 2020 Election - Wall Street Journal](https://www.wsj.com/graphics/the-paths-to-victory/)
-* [The sicence of superspreading - Science](https://vis.sciencemag.org/covid-clusters/)
-* [El dominio histórico de la derecha en Madrid - elDiario.es](https://www.eldiario.es/madrid/gana-derecha-elecciones-madrid-mayoritaria-30-rico_1_7347696.html)
-* [The Permutation Test - Jared Wilber](https://www.jwilber.me/permutationtest/)
-* [Constellations - Nadieh Bremer](https://nbremer.github.io/planet-constellations/)
-* [Remote Triggering of Earthquakes - Will Chase](https://www.williamrchase.com/vizrisk/vizrisk_main/)
-* [Scrollytelling - Mapbox](https://demos.mapbox.com/scrollytelling/)
+
+- [The Billionaire Playbook - ProPublica](https://www.propublica.org/article/the-billionaire-playbook-how-sports-owners-use-their-teams-to-avoid-millions-in-taxes)
+- [Women's Pockets are Inferior - The Pudding](https://pudding.cool/2018/08/pockets/)
+- [Trump approval rating - Politico](https://www.politico.com/interactives/2019/trump-approval-rating-polls/)
+- [How the opioid epidemic evolved - Washington Post](https://www.washingtonpost.com/graphics/2019/investigations/opioid-pills-overdose-analysis/)
+- [US Covid-19 deaths, explained in 8 charts and maps - Vox](https://www.vox.com/22252693/covid-19-deaths-us-who-died)
+- [Life After Death on Wikipedia - The Pudding](https://pudding.cool/2018/08/wiki-death/)
+- [YouTube With Me - YouTube](https://youtube.com/trends/articles/with-me-interactive/)
+- [Unchecked Power - ProPublica](https://projects.propublica.org/nypd-unchecked-power/)
+- [Trump's environmental policies rule only part of America - Politico](https://www.politico.com/interactives/2018/trump-environmental-policies-rollbacks/)
+- [The story of New Zealand’s Covid-19 lockdown, in graphs - Stuff](https://interactives.stuff.co.nz/2020/05/coronavirus-covid-19-data-new-zealand/)
+- [Trump and Biden's Paths to Victory in the 2020 Election - Wall Street Journal](https://www.wsj.com/graphics/the-paths-to-victory/)
+- [The sicence of superspreading - Science](https://vis.sciencemag.org/covid-clusters/)
+- [El dominio histórico de la derecha en Madrid - elDiario.es](https://www.eldiario.es/madrid/gana-derecha-elecciones-madrid-mayoritaria-30-rico_1_7347696.html)
+- [The Permutation Test - Jared Wilber](https://www.jwilber.me/permutationtest/)
+- [Constellations - Nadieh Bremer](https://nbremer.github.io/planet-constellations/)
+- [Remote Triggering of Earthquakes - Will Chase](https://www.williamrchase.com/vizrisk/vizrisk_main/)
+- [Scrollytelling - Mapbox](https://demos.mapbox.com/scrollytelling/)
 
 ## Tips
+
 - Avoid using `viewport height` (vh) in your CSS because scrolling up and down constantly triggers vh to change, which will also trigger a window resize.
 
 ## Alternatives
+
 - [Scroll Trigger](https://greensock.com/scrolltrigger/)
 - [Waypoints](http://imakewebthings.com/waypoints/)
 - [ScrollMagic](http://scrollmagic.io/)

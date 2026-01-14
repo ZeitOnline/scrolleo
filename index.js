@@ -1,3 +1,3 @@
-import entry from "./src/entry";
+import entry from './src/entry';
 
 export default entry;

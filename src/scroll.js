@@ -14,15 +14,15 @@ function updateScrollDirection(container) {
 	const scrollY = getScrollY(container);
 	if (state.previousScrollY === scrollY) return;
 
-	if (scrollY > state.previousScrollY) state.direction = "down";
-	else if (scrollY < state.previousScrollY) state.direction = "up";
+	if (scrollY > state.previousScrollY) state.direction = 'down';
+	else if (scrollY < state.previousScrollY) state.direction = 'up';
 	state.previousScrollY = scrollY;
 }
 
 function getDirection(container) {
 	const target = container || window;
 	const state = scrollState.get(target);
-	return state ? state.direction : "down";
+	return state ? state.direction : 'down';
 }
 
 function addScrollListener(container) {
@@ -39,11 +39,11 @@ function addScrollListener(container) {
 	scrollState.set(target, {
 		listener,
 		previousScrollY: getScrollY(target),
-		direction: "down",
+		direction: 'down',
 		count: 1,
 	});
 
-	target.addEventListener("scroll", listener, { passive: true });
+	target.addEventListener('scroll', listener, { passive: true });
 }
 
 function removeScrollListener(container) {
@@ -55,7 +55,7 @@ function removeScrollListener(container) {
 
 		// only remove listener if no more references
 		if (state.count === 0) {
-			target.removeEventListener("scroll", state.listener);
+			target.removeEventListener('scroll', state.listener);
 			scrollState.delete(target);
 		}
 	}

@@ -20,10 +20,13 @@
     return [];
   }
 
+  // Module-level overlay element - single reusable overlay for all steps
+  let overlayElement = null;
+
   // SETUP
-  function create(className) {
+  function create() {
   	const el = document.createElement("div");
-  	el.className = `scrollama__debug-step ${className}`;
+  	el.className = "scrollama__debug-step";
   	el.style.position = "fixed";
   	el.style.left = "0";
   	el.style.width = "100%";
@@ -45,14 +48,25 @@
 
   // UPDATE
   function update({ id, step, marginTop }) {
-  	const { index, height } = step;
-  	const className = `scrollama__debug-step--${id}-${index}`;
-  	let el = document.querySelector(`.${className}`);
-  	if (!el) el = create(className);
+  	const { height } = step;
+  	
+  	// Create overlay if it doesn't exist
+  	if (!overlayElement) {
+  		overlayElement = create();
+  	}
 
-  	el.style.top = `${marginTop * -1}px`;
-  	el.style.height = `${height}px`;
-  	el.querySelector("p").style.top = `${height / 2}px`;
+  	// Update position and size for current step
+  	overlayElement.style.top = `${marginTop * -1}px`;
+  	overlayElement.style.height = `${height}px`;
+  	overlayElement.querySelector("p").style.top = `${height / 2}px`;
+  }
+
+  // CLEANUP
+  function cleanup() {
+  	if (overlayElement) {
+  		overlayElement.remove();
+  		overlayElement = null;
+  	}
   }
 
   function generateId() {
@@ -70,8 +84,15 @@
   	console.error(`scrollama error: ${msg}`);
   }
 
+  // WeakMap for fast index lookups without DOM attribute reads
+  const stepIndexMap = new WeakMap();
+
+  function setIndex(node, index) {
+  	stepIndexMap.set(node, index);
+  }
+
   function getIndex(node) {
-  	return +node.getAttribute("data-scrollama-index");
+  	return stepIndexMap.get(node);
   }
 
   function createProgressThreshold(height, threshold) {
@@ -101,9 +122,7 @@
   }
 
   function indexSteps(steps) {
-  	steps.forEach((step) =>
-  		step.node.setAttribute("data-scrollama-index", step.index)
-  	);
+  	steps.forEach((step) => setIndex(step.node, step.index));
   }
 
   function getOffsetTop(node) {
@@ -113,24 +132,67 @@
     return top + scrollTop - clientTop;
   }
 
-  let currentScrollY;
-  let comparisonScrollY;
-  let direction;
+  // WeakMap allows the container to be garbage collected if removed from DOM
+  // The state contains: scroll listener, previous scrollY, direction, and reference count
+  const scrollState = new WeakMap();
 
-  function onScroll(container) {
-  	const scrollTop = container ? container.scrollTop : window.pageYOffset;
-
-  	if (currentScrollY === scrollTop) return;
-  	currentScrollY = scrollTop;
-  	if (currentScrollY > comparisonScrollY) direction = "down";
-  	else if (currentScrollY < comparisonScrollY) direction = "up";
-  	comparisonScrollY = currentScrollY;
+  function getScrollY(container) {
+  	if (container === window) return window.scrollY;
+  	return container.scrollTop;
   }
 
-  function setupScroll(container) {
-  	currentScrollY = 0;
-  	comparisonScrollY = 0;
-  	document.addEventListener("scroll", () => onScroll(container));
+  function updateScrollDirection(container) {
+  	const state = scrollState.get(container);
+  	if (!state) return;
+
+  	const scrollY = getScrollY(container);
+  	if (state.previousScrollY === scrollY) return;
+
+  	if (scrollY > state.previousScrollY) state.direction = "down";
+  	else if (scrollY < state.previousScrollY) state.direction = "up";
+  	state.previousScrollY = scrollY;
+  }
+
+  function getDirection(container) {
+  	const target = container || window;
+  	const state = scrollState.get(target);
+  	return state ? state.direction : "down";
+  }
+
+  function addScrollListener(container) {
+  	const target = container || window;
+
+  	if (scrollState.has(target)) {
+  		const state = scrollState.get(target);
+  		// reference count to manage multiple listeners on the same container
+  		state.count += 1;
+  		return;
+  	}
+
+  	const listener = () => updateScrollDirection(target);
+  	scrollState.set(target, {
+  		listener,
+  		previousScrollY: getScrollY(target),
+  		direction: "down",
+  		count: 1,
+  	});
+
+  	target.addEventListener("scroll", listener, { passive: true });
+  }
+
+  function removeScrollListener(container) {
+  	const target = container || window;
+
+  	if (scrollState.has(target)) {
+  		const state = scrollState.get(target);
+  		state.count -= 1;
+
+  		// only remove listener if no more references
+  		if (state.count === 0) {
+  			target.removeEventListener("scroll", state.listener);
+  			scrollState.delete(target);
+  		}
+  	}
   }
 
   function scrollama() {
@@ -141,7 +203,8 @@
   	let globalOffset;
   	let containerElement;
   	let rootElement;
-
+  	
+  	let resizeObserver;
   	let progressThreshold = 0;
 
   	let isEnabled = false;
@@ -151,6 +214,14 @@
 
   	let exclude = [];
 
+  	// Batch progress callbacks with requestAnimationFrame
+  	let pendingProgressCallbacks = new Map();
+  	let rafScheduled = false;
+
+  	// Batch resize observer updates with requestAnimationFrame
+  	let resizeBatch = new Set();
+  	let resizeRafScheduled = false;
+
   	/* HELPERS */
   	function reset() {
   		cb = {
@@ -159,35 +230,67 @@
   			stepProgress: () => { },
   		};
   		exclude = [];
+  		pendingProgressCallbacks.clear();
+  		rafScheduled = false;
+  		resizeBatch.clear();
+  		resizeRafScheduled = false;
   	}
 
   	function handleEnable(shouldEnable) {
-  		if (shouldEnable && !isEnabled) updateObservers();
-  		if (!shouldEnable && isEnabled) disconnectObservers();
+  		if (shouldEnable && !isEnabled) initializeObservers();
+  		if (!shouldEnable && isEnabled) disconnectAllObservers();
   		isEnabled = shouldEnable;
+  	}
+
+  	function flushProgressCallbacks() {
+  		rafScheduled = false;
+  		pendingProgressCallbacks.forEach(({ element, index, progress, direction, step }) => {
+  			// Update step progress value
+  			step.progress = progress;
+  			// Execute callback if step is in enter state
+  			if (step.state === "enter") {
+  				const response = { element, index, progress, direction };
+  				cb.stepProgress(response);
+  			}
+  		});
+  		pendingProgressCallbacks.clear();
+  	}
+
+  	function scheduleProgressCallback(element, progress) {
+  		const index = getIndex(element);
+  		const step = steps[index];
+  		const currentDirection = getDirection(containerElement);
+  		
+  		// Store the latest progress update for this step
+  		pendingProgressCallbacks.set(index, {
+  			element,
+  			index,
+  			progress,
+  			direction: currentDirection,
+  			step
+  		});
+
+  		// Schedule requestAnimationFrame if not already scheduled
+  		if (!rafScheduled) {
+  			rafScheduled = true;
+  			requestAnimationFrame(flushProgressCallbacks);
+  		}
   	}
 
   	/* NOTIFY CALLBACKS */
   	function notifyProgress(element, progress) {
-  		const index = getIndex(element);
-  		const step = steps[index];
-  		if (progress !== undefined) step.progress = progress;
-  		const response = { element, index, progress, direction };
-  		if (step.state === "enter") cb.stepProgress(response);
+  		if (progress === undefined) return;
+  		scheduleProgressCallback(element, progress);
   	}
 
-  	function notifyStepEnter(element, check = true) {
+  	function notifyStepEnter(element) {
   		const index = getIndex(element);
   		const step = steps[index];
-  		const response = { element, index, direction };
+  		const currentDirection = getDirection(containerElement);
+  		const response = { element, index, direction: currentDirection };
 
-  		step.direction = direction;
+  		step.direction = currentDirection;
   		step.state = "enter";
-
-  		// if (isPreserveOrder && check && direction !== "up")
-  		//   notifyOthers(index, "above");
-  		// if (isPreserveOrder && check && direction === "up")
-  		//   notifyOthers(index, "below");
 
   		if (!exclude[index]) cb.stepEnter(response);
   		if (isTriggerOnce) exclude[index] = true;
@@ -199,36 +302,50 @@
 
   		if (!step.state) return false;
 
-  		const response = { element, index, direction };
+  		const currentDirection = getDirection(containerElement);
+  		const response = { element, index, direction: currentDirection };
 
   		if (isProgress) {
-  			if (direction === "down" && step.progress < 1) notifyProgress(element, 1);
-  			else if (direction === "up" && step.progress > 0)
+  			if (currentDirection === "down" && step.progress < 1) notifyProgress(element, 1);
+  			else if (currentDirection === "up" && step.progress > 0)
   				notifyProgress(element, 0);
   		}
 
-  		step.direction = direction;
+  		step.direction = currentDirection;
   		step.state = "exit";
 
   		cb.stepExit(response);
   	}
 
   	/* OBSERVERS - HANDLING */
-  	function resizeStep([entry]) {
-  		const index = getIndex(entry.target);
-  		const step = steps[index];
-  		const h = entry.target.offsetHeight;
-  		if (h !== step.height) {
-  			step.height = h;
-  			disconnectObserver(step);
-  			updateStepObserver(step);
-  			updateResizeObserver(step);
+  	function processResizeBatch() {
+  		resizeRafScheduled = false;
+  		resizeBatch.forEach((step) => {
+  			disconnectStepObservers(step);
+  			addStepObservers(step, isProgress);
+  		});
+  		resizeBatch.clear();
+  	}
+
+  	function resizeStep(entries) {
+  		entries.forEach((entry) => {
+  			const index = getIndex(entry.target);
+  			const step = steps[index];
+  			const h = entry.target.offsetHeight;
+  			if (h !== step.height) {
+  				step.height = h;
+  				resizeBatch.add(step);
+  			}
+  		});
+
+  		// Schedule batch processing if not already scheduled
+  		if (resizeBatch.size > 0 && !resizeRafScheduled) {
+  			resizeRafScheduled = true;
+  			requestAnimationFrame(processResizeBatch);
   		}
   	}
 
-  	function intersectStep([entry]) {
-  		onScroll(containerElement);
-
+  	function intersectStep([entry]) {		
   		const { isIntersecting, target } = entry;
   		if (isIntersecting) notifyStepEnter(target);
   		else notifyStepExit(target);
@@ -243,27 +360,28 @@
   	}
 
   	/*  OBSERVERS - CREATION */
-  	function disconnectObserver({ observers }) {
+  	function disconnectStepObservers({ observers }) {
   		Object.keys(observers).map((name) => {
   			observers[name].disconnect();
   		});
   	}
 
-  	function disconnectObservers() {
-  		steps.forEach(disconnectObserver);
+  	function disconnectAllObservers() {
+  		steps.forEach(disconnectStepObservers);
+  		if (resizeObserver) resizeObserver.disconnect();
   	}
 
-  	function updateResizeObserver(step) {
-  		const observer = new ResizeObserver(resizeStep);
-  		observer.observe(step.node);
-  		step.observers.resize = observer;
+  	function addResizeObserver() {
+  		resizeObserver = new ResizeObserver(resizeStep);
+  		steps.forEach((step) => resizeObserver.observe(step.node));
   	}
 
-  	function updateResizeObservers() {
-  		steps.forEach(updateResizeObserver);
+  	function addStepObservers(step, isProgress) {
+  		addStepIntersectionObserver(step);
+  		if (isProgress) addProgressIntersectionObserver(step);
   	}
 
-  	function updateStepObserver(step) {
+  	function addStepIntersectionObserver(step) {
   		const h = window.innerHeight;
   		const off = step.offset || globalOffset;
   		const factor = off.format === "pixels" ? 1 : h;
@@ -283,11 +401,7 @@
   		if (isDebug) update({ id, step, marginTop, marginBottom });
   	}
 
-  	function updateStepObservers() {
-  		steps.forEach(updateStepObserver);
-  	}
-
-  	function updateProgressObserver(step) {
+  	function addProgressIntersectionObserver(step) {
   		const h = window.innerHeight;
   		const off = step.offset || globalOffset;
   		const factor = off.format === "pixels" ? 1 : h;
@@ -304,15 +418,10 @@
   		step.observers.progress = observer;
   	}
 
-  	function updateProgressObservers() {
-  		steps.forEach(updateProgressObserver);
-  	}
-
-  	function updateObservers() {
-  		disconnectObservers();
-  		updateResizeObservers();
-  		updateStepObservers();
-  		if (isProgress) updateProgressObservers();
+  	function initializeObservers() {
+  		disconnectAllObservers();
+  		addResizeObserver();
+  		steps.forEach((step) => addStepObservers(step, isProgress));
   	}
 
   	/* SETUP */
@@ -329,17 +438,23 @@
   		container = undefined,
   		root = null
   	}) => {
+  		addScrollListener(container);
 
-  		setupScroll(container);
+  		// Batch layout reads to reduce layout thrashing
+  		const nodes = selectAll(step, parent);
+  		const layoutData = nodes.map((node) => ({
+  			height: node.offsetHeight,
+  			top: getOffsetTop(node),
+  		}));
 
-  		steps = selectAll(step, parent).map((node, index) => ({
+  		steps = nodes.map((node, index) => ({
   			index,
   			direction: undefined,
-  			height: node.offsetHeight,
+  			height: layoutData[index].height,
   			node,
   			observers: {},
   			offset: parseOffset(node.dataset.offset),
-  			top: getOffsetTop(node),
+  			top: layoutData[index].top,
   			progress: 0,
   			state: undefined,
   		}));
@@ -351,6 +466,10 @@
 
   		isProgress = progress;
   		isTriggerOnce = once;
+  		// Cleanup debug overlay if debug is being disabled
+  		if (isDebug && !debug) {
+  			cleanup();
+  		}
   		isDebug = debug;
   		progressThreshold = Math.max(1, +threshold);
   		globalOffset = parseOffset(offset);
@@ -376,18 +495,23 @@
   	S.destroy = () => {
   		handleEnable(false);
   		reset();
+  		removeScrollListener(containerElement);
+  		if (isDebug) {
+  			cleanup();
+  		}
+  		steps = [];
   		return S;
   	};
 
   	S.resize = () => {
-  		updateObservers();
+  		initializeObservers();
   		return S;
   	};
 
   	S.offset = (x) => {
   		if (x === null || x === undefined) return globalOffset.value;
   		globalOffset = parseOffset(x);
-  		updateObservers();
+  		initializeObservers();
   		return S;
   	};
 

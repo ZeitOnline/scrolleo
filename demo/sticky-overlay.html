@@ -1,197 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Scrollama Demo: Sticky Overlay</title>
-	<meta name="description" content="Scrollama Demo: Sticky graphic overlay pattern" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="style.css" />
-	<style>
-		#scrolly {
-			position: relative;
-			background-color: var(--color-bg);
-			padding: 1rem;
-		}
-
-		article {
-			position: relative;
-			padding: 0;
-			max-width: 20rem;
-			margin: 0 auto;
-		}
-
-		figure {
-			position: sticky;
-			left: 0;
-			width: 100%;
-			margin: 0;
-			transform: translate3d(0, 0, 0);
-			background-color: var(--color-secondary);
-			z-index: 0;
-		}
-
-		figure p {
-			text-align: center;
-			padding: 1rem;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-size: 8rem;
-			font-weight: 900;
-			color: var(--color-white);
-		}
-
-		.step {
-			margin: 0 auto 2rem auto;
-			color: var(--color-white);
-			background-color: rgba(0, 0, 0, 0.1);
-		}
-
-		.step:last-child {
-			margin-bottom: 0;
-		}
-
-		.step.is-active p {
-			background-color: var(--color-accent);
-			color: var(--color-primary);
-		}
-
-		.step p {
-			text-align: center;
-			padding: 1rem;
-			font-size: var(--font-size-lg);
-			background-color: var(--color-primary);
-		}
-	</style>
-</head>
-<body>
-	<main>
-		<nav>
-			<a href="index.html">scrollama.js</a>
-			<div class="nav__examples">
-				<p>Examples:</p>
-				<a href="basic.html">Basic</a>
-				<a href="progress.html">Progress</a>
-				<a href="sticky-side.html">Sticky Side</a>
-				<a href="sticky-overlay.html">Sticky Overlay</a>
-				<a href="percentage-offset.html">Percentage Offset</a>
-				<a href="pixel-offset.html">Pixel Offset</a>
-				<a href="multiple.html">Multiple Instances</a>
-				<a href="scroll-parent.html">Nested Scroll Container</a>
-				<a href="performance-test.html">Performance Test</a>
-			</div>
-		</nav>
-		<section id="intro">
-			<h1 class="intro__hed">Sticky Overlay Example</h1>
-			<p class="intro__dek">
-				Start scrolling to see how it works.
-			</p>
-		</section>
-
-		<section id="scrolly">
-			<figure>
-				<p>0</p>
-			</figure>
-
-			<article>
-				<div class="step" data-step="1">
-					<p>STEP 1</p>
-				</div>
-				<div class="step" data-step="2">
-					<p>STEP 2</p>
-				</div>
-				<div class="step" data-step="3">
-					<p>STEP 3</p>
-				</div>
-				<div class="step" data-step="4">
-					<p>STEP 4</p>
-				</div>
-			</article>
-		</section>
-
-		<section id="outro"></section>
-	</main>
-
-	<script src="../build/scrollama.js"></script>
-	<script src="debug-utils.js"></script>
-	<script>
-		const main = document.querySelector("main");
-		const scrolly = main.querySelector("#scrolly");
-		const figure = scrolly.querySelector("figure");
-		const article = scrolly.querySelector("article");
-		const steps = article.querySelectorAll(".step");
-
-		// Initialize scrollama
-		const scroller = scrollama();
-
-		// Setup options
-		const setupOptions = {
-			step: "#scrolly article .step",
-			offset: 0.5,
-			debug: false
-		};
-
-		// Window resize handler
-		function handleResize() {
-			// Update height of step elements
-			const stepH = Math.floor(window.innerHeight * 0.75);
-			steps.forEach((step) => {
-				step.style.height = stepH + "px";
-			});
-
-			const figureHeight = window.innerHeight / 2;
-			const figureMarginTop = (window.innerHeight - figureHeight) / 2;
-
-			figure.style.height = figureHeight + "px";
-			figure.style.top = figureMarginTop + "px";
-
-			// Tell scrollama to update new element dimensions
-			scroller.resize();
-		}
-
-		// Event handlers
-		function handleStepEnter(response) {
-			console.log(response);
-			// response = { element, direction, index }
-
-			// Add color to current step only
-			steps.forEach((step, i) => {
-				if (i === response.index) {
-					step.classList.add("is-active");
-				} else {
-					step.classList.remove("is-active");
-				}
-			});
-
-			// Update graphic based on step
-			const figureP = figure.querySelector("p");
-			if (figureP) {
-				figureP.textContent = response.index + 1;
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrollama Demo: Sticky Overlay</title>
+		<meta
+			name="description"
+			content="Scrollama Demo: Sticky graphic overlay pattern"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			#scrolly {
+				position: relative;
+				background-color: var(--color-bg);
+				padding: 1rem;
 			}
-		}
 
-		function init() {
-			// Force a resize on load to ensure proper dimensions
-			handleResize();
+			article {
+				position: relative;
+				padding: 0;
+				max-width: 20rem;
+				margin: 0 auto;
+			}
 
-			// Setup scrollama
-			scroller
-				.setup(setupOptions)
-				.onStepEnter(handleStepEnter);
+			figure {
+				position: sticky;
+				left: 0;
+				width: 100%;
+				margin: 0;
+				transform: translate3d(0, 0, 0);
+				background-color: var(--color-secondary);
+				z-index: 0;
+			}
 
-			// Setup resize event
-			window.addEventListener("resize", handleResize);
+			figure p {
+				text-align: center;
+				padding: 1rem;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				font-size: 8rem;
+				font-weight: 900;
+				color: var(--color-white);
+			}
 
-			// Create debug toggle with event handlers
-			createDebugToggle(scroller, setupOptions, {
-				onStepEnter: handleStepEnter
-			});
-		}
+			.step {
+				margin: 0 auto 2rem auto;
+				color: var(--color-white);
+				background-color: rgba(0, 0, 0, 0.1);
+			}
 
-		// Initialize
-		init();
-	</script>
-</body>
+			.step:last-child {
+				margin-bottom: 0;
+			}
+
+			.step.is-active p {
+				background-color: var(--color-accent);
+				color: var(--color-primary);
+			}
+
+			.step p {
+				text-align: center;
+				padding: 1rem;
+				font-size: var(--font-size-lg);
+				background-color: var(--color-primary);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">scrollama.js</a>
+				<div class="nav__examples">
+					<p>Examples:</p>
+					<a href="basic.html">Basic</a>
+					<a href="progress.html">Progress</a>
+					<a href="sticky-side.html">Sticky Side</a>
+					<a href="sticky-overlay.html">Sticky Overlay</a>
+					<a href="percentage-offset.html">Percentage Offset</a>
+					<a href="pixel-offset.html">Pixel Offset</a>
+					<a href="multiple.html">Multiple Instances</a>
+					<a href="scroll-parent.html">Nested Scroll Container</a>
+					<a href="performance-test.html">Performance Test</a>
+				</div>
+			</nav>
+			<section id="intro">
+				<h1 class="intro__hed">Sticky Overlay Example</h1>
+				<p class="intro__dek">Start scrolling to see how it works.</p>
+			</section>
+
+			<section id="scrolly">
+				<figure>
+					<p>0</p>
+				</figure>
+
+				<article>
+					<div class="step" data-step="1">
+						<p>STEP 1</p>
+					</div>
+					<div class="step" data-step="2">
+						<p>STEP 2</p>
+					</div>
+					<div class="step" data-step="3">
+						<p>STEP 3</p>
+					</div>
+					<div class="step" data-step="4">
+						<p>STEP 4</p>
+					</div>
+				</article>
+			</section>
+
+			<section id="outro"></section>
+		</main>
+
+		<script src="../build/scrollama.js"></script>
+		<script src="debug-utils.js"></script>
+		<script>
+			const main = document.querySelector('main');
+			const scrolly = main.querySelector('#scrolly');
+			const figure = scrolly.querySelector('figure');
+			const article = scrolly.querySelector('article');
+			const steps = article.querySelectorAll('.step');
+
+			// Initialize scrollama
+			const scroller = scrollama();
+
+			// Setup options
+			const setupOptions = {
+				step: '#scrolly article .step',
+				offset: 0.5,
+				debug: false,
+			};
+
+			// Window resize handler
+			function handleResize() {
+				// Update height of step elements
+				const stepH = Math.floor(window.innerHeight * 0.75);
+				steps.forEach((step) => {
+					step.style.height = stepH + 'px';
+				});
+
+				const figureHeight = window.innerHeight / 2;
+				const figureMarginTop = (window.innerHeight - figureHeight) / 2;
+
+				figure.style.height = figureHeight + 'px';
+				figure.style.top = figureMarginTop + 'px';
+
+				// Tell scrollama to update new element dimensions
+				scroller.resize();
+			}
+
+			// Event handlers
+			function handleStepEnter(response) {
+				console.log(response);
+				// response = { element, direction, index }
+
+				// Add color to current step only
+				steps.forEach((step, i) => {
+					if (i === response.index) {
+						step.classList.add('is-active');
+					} else {
+						step.classList.remove('is-active');
+					}
+				});
+
+				// Update graphic based on step
+				const figureP = figure.querySelector('p');
+				if (figureP) {
+					figureP.textContent = response.index + 1;
+				}
+			}
+
+			function init() {
+				// Force a resize on load to ensure proper dimensions
+				handleResize();
+
+				// Setup scrollama
+				scroller.setup(setupOptions).onStepEnter(handleStepEnter);
+
+				// Setup resize event
+				window.addEventListener('resize', handleResize);
+
+				// Create debug toggle with event handlers
+				createDebugToggle(scroller, setupOptions, {
+					onStepEnter: handleStepEnter,
+				});
+			}
+
+			// Initialize
+			init();
+		</script>
+	</body>
 </html>

@@ -32,7 +32,7 @@ function createDebugToggle(scroller, setupOptions, eventHandlers) {
 	function reSetupWithHandlers(debugValue) {
 		const newOptions = { ...setupOptions, debug: debugValue };
 		scroller.setup(newOptions);
-		
+
 		// Re-attach event handlers if they were provided
 		if (eventHandlers) {
 			if (eventHandlers.onStepEnter) {
@@ -45,7 +45,7 @@ function createDebugToggle(scroller, setupOptions, eventHandlers) {
 				scroller.onStepProgress(eventHandlers.onStepProgress);
 			}
 		}
-		
+
 		// Re-initialize observers to apply debug changes
 		scroller.resize();
 	}
@@ -82,6 +82,6 @@ function createDebugToggle(scroller, setupOptions, eventHandlers) {
 	return {
 		toggle: toggleDebug,
 		isEnabled: () => isDebugEnabled,
-		button: toggleButton
+		button: toggleButton,
 	};
 }
