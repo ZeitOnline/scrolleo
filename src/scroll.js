@@ -1,7 +1,5 @@
-let direction = "down";
-
 // WeakMap allows the container to be garbage collected if removed from DOM
-// The state contains: scroll listener, previous scrollY, and reference count
+// The state contains: scroll listener, previous scrollY, direction, and reference count
 const scrollState = new WeakMap();
 
 function getScrollY(container) {
@@ -16,9 +14,15 @@ function updateScrollDirection(container) {
 	const scrollY = getScrollY(container);
 	if (state.previousScrollY === scrollY) return;
 
-	if (scrollY > state.previousScrollY) direction = "down";
-	else if (scrollY < state.previousScrollY) direction = "up";
+	if (scrollY > state.previousScrollY) state.direction = "down";
+	else if (scrollY < state.previousScrollY) state.direction = "up";
 	state.previousScrollY = scrollY;
+}
+
+function getDirection(container) {
+	const target = container || window;
+	const state = scrollState.get(target);
+	return state ? state.direction : "down";
 }
 
 function addScrollListener(container) {
@@ -35,6 +39,7 @@ function addScrollListener(container) {
 	scrollState.set(target, {
 		listener,
 		previousScrollY: getScrollY(target),
+		direction: "down",
 		count: 1,
 	});
 
@@ -56,4 +61,4 @@ function removeScrollListener(container) {
 	}
 }
 
-export { addScrollListener, removeScrollListener, direction };
+export { addScrollListener, removeScrollListener, getDirection };

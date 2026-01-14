@@ -7,7 +7,7 @@ import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
 import getOffsetTop from "./getOffsetTop";
-import { addScrollListener, direction, removeScrollListener } from "./scroll";
+import { addScrollListener, getDirection, removeScrollListener } from "./scroll";
 
 function scrollama() {
 	let cb = {};
@@ -67,13 +67,14 @@ function scrollama() {
 	function scheduleProgressCallback(element, progress) {
 		const index = getIndex(element);
 		const step = steps[index];
+		const currentDirection = getDirection(containerElement);
 		
 		// Store the latest progress update for this step
 		pendingProgressCallbacks.set(index, {
 			element,
 			index,
 			progress,
-			direction,
+			direction: currentDirection,
 			step
 		});
 
@@ -93,9 +94,10 @@ function scrollama() {
 	function notifyStepEnter(element) {
 		const index = getIndex(element);
 		const step = steps[index];
-		const response = { element, index, direction };
+		const currentDirection = getDirection(containerElement);
+		const response = { element, index, direction: currentDirection };
 
-		step.direction = direction;
+		step.direction = currentDirection;
 		step.state = "enter";
 
 		if (!exclude[index]) cb.stepEnter(response);
@@ -108,15 +110,16 @@ function scrollama() {
 
 		if (!step.state) return false;
 
-		const response = { element, index, direction };
+		const currentDirection = getDirection(containerElement);
+		const response = { element, index, direction: currentDirection };
 
 		if (isProgress) {
-			if (direction === "down" && step.progress < 1) notifyProgress(element, 1);
-			else if (direction === "up" && step.progress > 0)
+			if (currentDirection === "down" && step.progress < 1) notifyProgress(element, 1);
+			else if (currentDirection === "up" && step.progress > 0)
 				notifyProgress(element, 0);
 		}
 
-		step.direction = direction;
+		step.direction = currentDirection;
 		step.state = "exit";
 
 		cb.stepExit(response);
