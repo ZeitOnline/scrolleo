@@ -13,7 +13,7 @@ import {
 	removeScrollListener,
 } from './scroll';
 
-function scrollama() {
+function scrolleo() {
 	let cb = {};
 
 	let id = generateId();
@@ -356,4 +356,4 @@ function scrollama() {
 	return S;
 }
 
-export default scrollama;
+export default scrolleo;

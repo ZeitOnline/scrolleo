@@ -1,9 +1,9 @@
-declare function scrollama(): scrollama.ScrollamaInstance;
+declare function scrolleo(): scrolleo.ScrolleoInstance;
 
-export default scrollama;
+export default scrolleo;
 
-declare namespace scrollama {
-	export type ScrollamaOptions = {
+declare namespace scrolleo {
+	export type ScrolleoOptions = {
 		step: NodeList | HTMLElement[] | string;
 		parent?: HTMLElement | string;
 		offset?: number | string;
@@ -15,33 +15,41 @@ declare namespace scrollama {
 		root?: HTMLElement | null;
 	};
 
-	export type ProgressCallbackResponse = {
+	export type ScrolleoProgressCallbackResponse = {
 		element: HTMLElement;
 		index: number;
 		progress: number;
 		direction: 'up' | 'down';
 	};
 
-	export type CallbackResponse = {
+	export type ScrolleoCallbackResponse = {
 		element: HTMLElement;
 		index: number;
 		direction: 'up' | 'down';
 	};
 
-	export type StepCallback = (response: CallbackResponse) => void;
-	export type StepProgressCallback = (
-		response: ProgressCallbackResponse
+	export type ScrolleoStepCallback = (response: ScrolleoCallbackResponse) => void;
+	export type ScrolleoStepProgressCallback = (
+		response: ScrolleoProgressCallbackResponse
 	) => void;
 
-	export type ScrollamaInstance = {
-		setup: (options: ScrollamaOptions) => ScrollamaInstance;
-		onStepEnter: (callback: StepCallback) => ScrollamaInstance;
-		onStepExit: (callback: StepCallback) => ScrollamaInstance;
-		onStepProgress: (callback: StepProgressCallback) => ScrollamaInstance;
-		resize: () => ScrollamaInstance;
-		enable: () => ScrollamaInstance;
-		disable: () => ScrollamaInstance;
-		destroy: () => ScrollamaInstance;
-		offset: (value?: number | string | null) => ScrollamaInstance | number;
+	export type ScrolleoInstance = {
+		setup: (options: ScrolleoOptions) => ScrolleoInstance;
+		onStepEnter: (callback: ScrolleoStepCallback) => ScrolleoInstance;
+		onStepExit: (callback: ScrolleoStepCallback) => ScrolleoInstance;
+		onStepProgress: (callback: ScrolleoStepProgressCallback) => ScrolleoInstance;
+		resize: () => ScrolleoInstance;
+		enable: () => ScrolleoInstance;
+		disable: () => ScrolleoInstance;
+		destroy: () => ScrolleoInstance;
+		offset: (value?: number | string | null) => ScrolleoInstance | number;
 	};
+
+	// Backward compatibility aliases
+	export type ScrollamaOptions = ScrolleoOptions;
+	export type ScrollamaInstance = ScrolleoInstance;
+	export type ProgressCallbackResponse = ScrolleoProgressCallbackResponse;
+	export type CallbackResponse = ScrolleoCallbackResponse;
+	export type StepCallback = ScrolleoStepCallback;
+	export type StepProgressCallback = ScrolleoStepProgressCallback;
 }
