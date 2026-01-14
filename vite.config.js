@@ -5,7 +5,7 @@ export default defineConfig({
 		lib: {
 			entry: 'index.js',
 			name: 'scrollama',
-			fileName: (format) => `scrollama.${format === 'es' ? 'js' : format}.js`,
+			fileName: (format) => (format === 'es' ? 'scrollama.js' : `scrollama.${format}.js`),
 			formats: ['es'],
 		},
 		outDir: 'dist',
