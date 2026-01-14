@@ -9,7 +9,9 @@
 		"dev": "cross-env NODE_ENV=development rollup -w -c",
 		"build": "npm run pretest && cross-env NODE_ENV=production rollup -c && npm run docs",
 		"pretest": "cross-env NODE_ENV=development rollup -c",
-		"docs": "cp build/scrollama.min.js docs"
+		"docs": "cp build/scrollama.min.js docs",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
 	},
 	"module": "index",
 	"jsnext:main": "index",
@@ -36,6 +38,8 @@
 	"license": "MIT",
 	"devDependencies": {
 		"cross-env": "^7.0.3",
+		"prettier": "^3.0.0",
+		"prettier-plugin-packagejson": "^0.0.1",
 		"rollup": "^1.32.1",
 		"rollup-plugin-buble": "^0.19.8",
 		"rollup-plugin-commonjs": "^10.1.0",
