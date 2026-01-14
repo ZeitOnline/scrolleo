@@ -1,3 +1,10 @@
+// WeakMap for fast index lookups without DOM attribute reads
+const stepIndexMap = new WeakMap();
+
+export function setIndex(node, index) {
+	stepIndexMap.set(node, index);
+}
+
 export default function getIndex(node) {
-	return +node.getAttribute("data-scrollama-index");
+	return stepIndexMap.get(node);
 }

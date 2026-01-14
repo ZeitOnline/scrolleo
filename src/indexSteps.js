@@ -1,5 +1,5 @@
+import { setIndex } from "./getIndex";
+
 export default function indexSteps(steps) {
-	steps.forEach((step) =>
-		step.node.setAttribute("data-scrollama-index", step.index)
-	);
+	steps.forEach((step) => setIndex(step.node, step.index));
 }

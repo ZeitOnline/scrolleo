@@ -2,7 +2,7 @@ import { selectAll } from "./dom";
 import * as bug from "./debug";
 import generateId from "./generateId";
 import err from "./err";
-import getIndex from "./getIndex";
+import getIndex, { setIndex } from "./getIndex";
 import createProgressThreshold from "./createProgressThreshold";
 import parseOffset from "./parseOffset";
 import indexSteps from "./indexSteps";
