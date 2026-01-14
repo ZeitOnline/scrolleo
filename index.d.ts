@@ -1,5 +1,6 @@
-export = scrollama;
 declare function scrollama(): scrollama.ScrollamaInstance;
+
+export default scrollama;
 
 declare namespace scrollama {
 	export type ScrollamaOptions = {

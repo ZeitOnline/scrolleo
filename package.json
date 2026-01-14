@@ -2,19 +2,22 @@
 	"name": "scrollama",
 	"version": "3.2.0",
 	"description": "Lightweight scrollytelling library using IntersectionObserver",
-	"main": "build/scrollama.js",
-	"browser": "build/scrollama.js",
-	"types": "index.d.ts",
+	"type": "module",
+	"main": "./dist/scrollama.js",
+	"module": "./dist/scrollama.js",
+	"types": "./index.d.ts",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"import": "./dist/scrollama.js"
+		}
+	},
 	"scripts": {
-		"dev": "cross-env NODE_ENV=development rollup -w -c",
-		"build": "npm run pretest && cross-env NODE_ENV=production rollup -c && npm run docs",
-		"pretest": "cross-env NODE_ENV=development rollup -c",
-		"docs": "cp build/scrollama.min.js docs",
+		"dev": "vite build --watch",
+		"build": "vite build",
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
 	},
-	"module": "index",
-	"jsnext:main": "index",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/russellsamora/scrollama.git"
