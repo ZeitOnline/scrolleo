@@ -599,6 +599,8 @@
 		let activeStepsCount = 0;
 
 		function initScrollama() {
+			const debug = document.location.search.includes('debug');
+
 			// Generate all steps
 			const allSteps = [];
 			for (let i = 1; i <= CONFIG.numSections; i++) {
@@ -616,7 +618,7 @@
 						progress: true, // Enable progress tracking for maximum callbacks
 						threshold: CONFIG.progressThreshold, // Granular threshold
 						offset: 0.5,
-						debug: false
+						debug,
 					})
 					.onStepEnter((response) => {
 						perfMonitor.recordCallback();
