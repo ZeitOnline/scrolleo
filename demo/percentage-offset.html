@@ -229,9 +229,10 @@
 			<section id="outro"></section>
 		</main>
 
-		<script src="../build/scrollama.js"></script>
 		<script src="debug-utils.js"></script>
-		<script>
+		<script type="module">
+			import scrollama from '../dist/scrollama.js';
+
 			const scrolly = document.querySelector('#scrolly');
 			const article = scrolly.querySelector('article');
 			const steps = article.querySelectorAll('.step');

@@ -226,9 +226,10 @@
 			</section>
 		</main>
 
-		<script src="../build/scrollama.js"></script>
 		<script src="debug-utils.js"></script>
-		<script>
+		<script type="module">
+			import scrollama from '../dist/scrollama.js';
+
 			// Performance monitoring
 			const perfMonitor = {
 				fps: 0,
