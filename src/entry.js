@@ -280,6 +280,10 @@ function scrollama() {
 
 		isProgress = progress;
 		isTriggerOnce = once;
+		// Cleanup debug overlay if debug is being disabled
+		if (isDebug && !debug) {
+			bug.cleanup();
+		}
 		isDebug = debug;
 		progressThreshold = Math.max(1, +threshold);
 		globalOffset = parseOffset(offset);
@@ -306,6 +310,9 @@ function scrollama() {
 		handleEnable(false);
 		reset();
 		removeScrollListener(containerElement);
+		if (isDebug) {
+			bug.cleanup();
+		}
 		steps = [];
 		return S;
 	};

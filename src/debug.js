@@ -1,8 +1,11 @@
 
+// Module-level overlay element - single reusable overlay for all steps
+let overlayElement = null;
+
 // SETUP
-function create(className) {
+function create() {
 	const el = document.createElement("div");
-	el.className = `scrollama__debug-step ${className}`;
+	el.className = "scrollama__debug-step";
 	el.style.position = "fixed";
 	el.style.left = "0";
 	el.style.width = "100%";
@@ -24,14 +27,25 @@ function create(className) {
 
 // UPDATE
 function update({ id, step, marginTop }) {
-	const { index, height } = step;
-	const className = `scrollama__debug-step--${id}-${index}`;
-	let el = document.querySelector(`.${className}`);
-	if (!el) el = create(className);
+	const { height } = step;
+	
+	// Create overlay if it doesn't exist
+	if (!overlayElement) {
+		overlayElement = create();
+	}
 
-	el.style.top = `${marginTop * -1}px`;
-	el.style.height = `${height}px`;
-	el.querySelector("p").style.top = `${height / 2}px`;
+	// Update position and size for current step
+	overlayElement.style.top = `${marginTop * -1}px`;
+	overlayElement.style.height = `${height}px`;
+	overlayElement.querySelector("p").style.top = `${height / 2}px`;
 }
 
-export { update };
+// CLEANUP
+function cleanup() {
+	if (overlayElement) {
+		overlayElement.remove();
+		overlayElement = null;
+	}
+}
+
+export { update, cleanup };
