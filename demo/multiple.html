@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Scrollama Demo: Multiple Instances</title>
+	<meta name="description" content="Scrollama Demo: Multiple scrollama instances on one page" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="style.css" />
+	<style>
+		#scroll {
+			background-color: #cdcdcd;
+			position: relative;
+			margin-top: 2rem;
+			margin-bottom: 2rem;
+		}
+
+		#scroll2 {
+			background-color: #cdcdcd;
+			position: relative;
+			margin-top: 2rem;
+			margin-bottom: 2rem;
+		}
+
+		.scroll__text {
+			padding: 1rem;
+			position: relative;
+		}
+
+		.step {
+			max-width: 30rem;
+			margin: 2rem auto;
+			border: 2px solid var(--color-primary);
+			background-color: var(--color-white);
+			min-height: 200px;
+		}
+
+		.step.is-active {
+			background-color: var(--color-accent);
+		}
+
+		.step p {
+			text-align: center;
+			padding: 1rem;
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<nav>
+			<a href="index.html">scrollama.js</a>
+			<div class="nav__examples">
+				<p>Examples:</p>
+				<a href="basic.html">Basic</a>
+				<a href="progress.html">Progress</a>
+				<a href="sticky-side.html">Sticky Side</a>
+				<a href="sticky-overlay.html">Sticky Overlay</a>
+				<a href="percentage-offset.html">Percentage Offset</a>
+				<a href="pixel-offset.html">Pixel Offset</a>
+				<a href="multiple.html">Multiple Instances</a>
+				<a href="scroll-parent.html">Nested Scroll Container</a>
+				<a href="performance-test.html">Performance Test</a>
+			</div>
+		</nav>
+		<section id="intro">
+			<h1 class="intro__hed">Multiple Instances Example</h1>
+			<p class="intro__dek">
+				This page demonstrates multiple scrollama instances working independently.
+			</p>
+		</section>
+		<section id="scroll">
+			<div class="scroll__text">
+				<div class="step" data-step="#ccc">
+					<p>Section 1 - Step 1</p>
+				</div>
+				<div class="step" data-step="#aaa">
+					<p>Section 1 - Step 2</p>
+				</div>
+				<div class="step" data-step="#888">
+					<p>Section 1 - Step 3</p>
+				</div>
+			</div>
+		</section>
+		<section id="scroll2">
+			<div class="scroll__text">
+				<div class="step" data-step="#666">
+					<p>Section 2 - Step 1</p>
+				</div>
+				<div class="step" data-step="#444">
+					<p>Section 2 - Step 2</p>
+				</div>
+				<div class="step" data-step="#222">
+					<p>Section 2 - Step 3</p>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script src="../build/scrollama.js"></script>
+	<script src="debug-utils.js"></script>
+	<script>
+		const container = document.querySelector("#scroll");
+		const text = container.querySelector(".scroll__text");
+		const steps = text.querySelectorAll(".step");
+
+		const container2 = document.querySelector("#scroll2");
+		const text2 = container2.querySelector(".scroll__text");
+		const steps2 = text2.querySelectorAll(".step");
+
+		const scroller = scrollama();
+		const scroller2 = scrollama();
+
+		// Setup options for first instance
+		const setupOptions1 = {
+			step: "#scroll .step",
+			offset: 0.33,
+			debug: false,
+			progress: true
+		};
+
+		// Setup options for second instance
+		const setupOptions2 = {
+			step: "#scroll2 .step",
+			offset: 0.67,
+			debug: false,
+			progress: true
+		};
+
+		function handleResize() {
+			// Use consistent but different sizes for each step
+			// Smaller heights so multiple steps are visible in viewport
+			const baseHeight = window.innerHeight * 0.4;
+			const sizeMultipliers = [1.0, 1.1, 1.2];
+			steps.forEach((step, index) => {
+				const h = baseHeight * (sizeMultipliers[index] || 1.0);
+				step.style.height = Math.floor(h) + "px";
+			});
+			scroller.resize();
+		}
+
+		function handleStepEnter(resp) {
+			console.log("enter", resp);
+			steps.forEach((step, i) => {
+				if (i === resp.index) {
+					step.classList.add("is-active");
+				} else {
+					step.classList.remove("is-active");
+				}
+			});
+		}
+
+		function handleStepExit(resp) {
+			console.log("exit", resp);
+			resp.element.classList.remove("is-active");
+		}
+
+		function handleProgress(resp) {
+			console.log("progress", resp);
+		}
+
+		function handleResize2() {
+			// Use consistent but different sizes for each step
+			// Smaller heights so multiple steps are visible in viewport
+			const baseHeight = window.innerHeight * 0.4;
+			const sizeMultipliers = [1.05, 1.15, 1.25];
+			steps2.forEach((step, index) => {
+				const h = baseHeight * (sizeMultipliers[index] || 1.0);
+				step.style.height = Math.floor(h) + "px";
+			});
+			scroller2.resize();
+		}
+
+		function handleStepEnter2(resp) {
+			console.log("enter", resp);
+			steps2.forEach((step, i) => {
+				if (i === resp.index) {
+					step.classList.add("is-active");
+				} else {
+					step.classList.remove("is-active");
+				}
+			});
+		}
+
+		function handleStepExit2(resp) {
+			console.log("exit", resp);
+			resp.element.classList.remove("is-active");
+		}
+
+		function handleProgress2(resp) {
+			console.log("progress", resp);
+		}
+
+		function init() {
+			handleResize();
+			handleResize2();
+
+			scroller
+				.setup(setupOptions1)
+				.onStepEnter(handleStepEnter)
+				.onStepExit(handleStepExit)
+				.onStepProgress(handleProgress);
+
+			scroller2
+				.setup(setupOptions2)
+				.onStepEnter(handleStepEnter2)
+				.onStepExit(handleStepExit2)
+				.onStepProgress(handleProgress2);
+
+			console.log("Scroller 1 offset:", scroller.offset());
+			console.log("Scroller 2 offset:", scroller2.offset());
+
+			// Setup resize event listeners
+			window.addEventListener("resize", () => {
+				handleResize();
+				handleResize2();
+			});
+
+			// Create debug toggles for both instances
+			// Note: debug-utils.js only handles one instance, so we'll create a simple toggle
+			// that toggles both instances together
+			const urlParams = new URLSearchParams(window.location.search);
+			const debugFromUrl = urlParams.has('debug');
+
+			const toggleButton = document.createElement('button');
+			toggleButton.className = 'debug-toggle';
+			toggleButton.textContent = debugFromUrl ? 'Debug: ON' : 'Debug: OFF';
+			if (debugFromUrl) toggleButton.classList.add('active');
+			toggleButton.setAttribute('aria-label', 'Toggle debug overlay');
+			document.body.appendChild(toggleButton);
+
+			let isDebugEnabled = debugFromUrl;
+
+			function toggleDebug() {
+				isDebugEnabled = !isDebugEnabled;
+				const newUrl = new URL(window.location.href);
+				if (isDebugEnabled) {
+					newUrl.searchParams.set('debug', '');
+				} else {
+					newUrl.searchParams.delete('debug');
+				}
+				window.history.pushState({}, '', newUrl);
+
+				const newOptions1 = { ...setupOptions1, debug: isDebugEnabled };
+				const newOptions2 = { ...setupOptions2, debug: isDebugEnabled };
+				scroller.setup(newOptions1);
+				scroller2.setup(newOptions2);
+				
+				// Re-attach handlers
+				scroller
+					.onStepEnter(handleStepEnter)
+					.onStepExit(handleStepExit)
+					.onStepProgress(handleProgress);
+				scroller2
+					.onStepEnter(handleStepEnter2)
+					.onStepExit(handleStepExit2)
+					.onStepProgress(handleProgress2);
+				
+				// Re-initialize observers
+				scroller.resize();
+				scroller2.resize();
+
+				toggleButton.textContent = isDebugEnabled ? 'Debug: ON' : 'Debug: OFF';
+				toggleButton.classList.toggle('active', isDebugEnabled);
+			}
+
+			if (debugFromUrl) {
+				scroller.setup({ ...setupOptions1, debug: true });
+				scroller2.setup({ ...setupOptions2, debug: true });
+				// Re-attach handlers
+				scroller
+					.onStepEnter(handleStepEnter)
+					.onStepExit(handleStepExit)
+					.onStepProgress(handleProgress);
+				scroller2
+					.onStepEnter(handleStepEnter2)
+					.onStepExit(handleStepExit2)
+					.onStepProgress(handleProgress2);
+				scroller.resize();
+				scroller2.resize();
+			}
+
+			toggleButton.addEventListener('click', toggleDebug);
+		}
+
+		init();
+	</script>
+</body>
+</html>
