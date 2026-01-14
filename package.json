@@ -12,6 +12,7 @@
 			"import": "./dist/scrollama.js"
 		}
 	},
+	"files": ["dist", "index.d.ts", "README.md", "LICENSE"],
 	"scripts": {
 		"dev": "vite build --watch",
 		"build": "vite build",
