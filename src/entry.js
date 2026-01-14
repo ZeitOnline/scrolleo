@@ -32,6 +32,10 @@ function scrollama() {
 	let pendingProgressCallbacks = new Map();
 	let rafScheduled = false;
 
+	// Batch resize observer updates with requestAnimationFrame
+	let resizeBatch = new Set();
+	let resizeRafScheduled = false;
+
 	/* HELPERS */
 	function reset() {
 		cb = {
@@ -42,6 +46,8 @@ function scrollama() {
 		exclude = [];
 		pendingProgressCallbacks.clear();
 		rafScheduled = false;
+		resizeBatch.clear();
+		resizeRafScheduled = false;
 	}
 
 	function handleEnable(shouldEnable) {
@@ -126,6 +132,15 @@ function scrollama() {
 	}
 
 	/* OBSERVERS - HANDLING */
+	function processResizeBatch() {
+		resizeRafScheduled = false;
+		resizeBatch.forEach((step) => {
+			disconnectStepObservers(step);
+			addStepObservers(step, isProgress);
+		});
+		resizeBatch.clear();
+	}
+
 	function resizeStep(entries) {
 		entries.forEach((entry) => {
 			const index = getIndex(entry.target);
@@ -133,10 +148,15 @@ function scrollama() {
 			const h = entry.target.offsetHeight;
 			if (h !== step.height) {
 				step.height = h;
-				disconnectStepObservers(step);
-				addStepObservers(step, isProgress);
+				resizeBatch.add(step);
 			}
 		});
+
+		// Schedule batch processing if not already scheduled
+		if (resizeBatch.size > 0 && !resizeRafScheduled) {
+			resizeRafScheduled = true;
+			requestAnimationFrame(processResizeBatch);
+		}
 	}
 
 	function intersectStep([entry]) {		
