@@ -276,6 +276,7 @@ function scrollama() {
 		handleEnable(false);
 		reset();
 		removeScrollListener(containerElement);
+		steps = [];
 		return S;
 	};
 
