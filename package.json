@@ -1,15 +1,15 @@
 {
-	"name": "scrollama",
-	"version": "3.2.0",
+	"name": "@zeitonline/scrolleo",
+	"version": "1.0.0",
 	"description": "Lightweight scrollytelling library using IntersectionObserver",
 	"type": "module",
-	"main": "./dist/scrollama.js",
-	"module": "./dist/scrollama.js",
+	"main": "./dist/scrolleo.js",
+	"module": "./dist/scrolleo.js",
 	"types": "./index.d.ts",
 	"exports": {
 		".": {
 			"types": "./index.d.ts",
-			"import": "./dist/scrollama.js"
+			"import": "./dist/scrolleo.js"
 		}
 	},
 	"files": ["dist", "index.d.ts", "README.md", "LICENSE"],
@@ -22,9 +22,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/russellsamora/scrollama.git"
+		"url": "https://github.com/ZeitOnline/scrolleo.git"
 	},
-	"homepage": "https://github.com/russellsamora/scrollama#readme",
+	"homepage": "https://github.com/ZeitOnline/scrolleo#readme",
+	"publishConfig": {
+		"access": "public"
+	},
 	"keywords": [
 		"scrollytelling",
 		"scroll",
@@ -39,7 +42,7 @@
 		"view",
 		"trigger"
 	],
-	"author": "Russell Samora",
+	"author": "ZeitOnline",
 	"license": "MIT",
 	"devDependencies": {
 		"prettier": "^3.0.0",
