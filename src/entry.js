@@ -254,14 +254,21 @@ function scrollama() {
 	}) => {
 		addScrollListener(container);
 
-		steps = selectAll(step, parent).map((node, index) => ({
+		// Batch layout reads to reduce layout thrashing
+		const nodes = selectAll(step, parent);
+		const layoutData = nodes.map((node) => ({
+			height: node.offsetHeight,
+			top: getOffsetTop(node),
+		}));
+
+		steps = nodes.map((node, index) => ({
 			index,
 			direction: undefined,
-			height: node.offsetHeight,
+			height: layoutData[index].height,
 			node,
 			observers: {},
 			offset: parseOffset(node.dataset.offset),
-			top: getOffsetTop(node),
+			top: layoutData[index].top,
 			progress: 0,
 			state: undefined,
 		}));
