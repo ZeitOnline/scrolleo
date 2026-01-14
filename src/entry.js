@@ -28,6 +28,10 @@ function scrollama() {
 
 	let exclude = [];
 
+	// Batch progress callbacks with requestAnimationFrame
+	let pendingProgressCallbacks = new Map();
+	let rafScheduled = false;
+
 	/* HELPERS */
 	function reset() {
 		cb = {
@@ -36,6 +40,8 @@ function scrollama() {
 			stepProgress: () => { },
 		};
 		exclude = [];
+		pendingProgressCallbacks.clear();
+		rafScheduled = false;
 	}
 
 	function handleEnable(shouldEnable) {
@@ -44,13 +50,44 @@ function scrollama() {
 		isEnabled = shouldEnable;
 	}
 
-	/* NOTIFY CALLBACKS */
-	function notifyProgress(element, progress) {
+	function flushProgressCallbacks() {
+		rafScheduled = false;
+		pendingProgressCallbacks.forEach(({ element, index, progress, direction, step }) => {
+			// Update step progress value
+			step.progress = progress;
+			// Execute callback if step is in enter state
+			if (step.state === "enter") {
+				const response = { element, index, progress, direction };
+				cb.stepProgress(response);
+			}
+		});
+		pendingProgressCallbacks.clear();
+	}
+
+	function scheduleProgressCallback(element, progress) {
 		const index = getIndex(element);
 		const step = steps[index];
-		if (progress !== undefined) step.progress = progress;
-		const response = { element, index, progress, direction };
-		if (step.state === "enter") cb.stepProgress(response);
+		
+		// Store the latest progress update for this step
+		pendingProgressCallbacks.set(index, {
+			element,
+			index,
+			progress,
+			direction,
+			step
+		});
+
+		// Schedule requestAnimationFrame if not already scheduled
+		if (!rafScheduled) {
+			rafScheduled = true;
+			requestAnimationFrame(flushProgressCallbacks);
+		}
+	}
+
+	/* NOTIFY CALLBACKS */
+	function notifyProgress(element, progress) {
+		if (progress === undefined) return;
+		scheduleProgressCallback(element, progress);
 	}
 
 	function notifyStepEnter(element) {
