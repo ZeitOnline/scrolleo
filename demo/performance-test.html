@@ -11,143 +11,127 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="style.css" />
 		<style>
-			body {
-				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-				min-height: 500vh;
-			}
-
-			/* Performance Monitor */
-			#performance-monitor {
-				position: fixed;
-				top: 10px;
-				right: 10px;
-				background: rgba(0, 0, 0, 0.8);
-				color: #0f0;
-				padding: 15px;
-				border-radius: 8px;
-				font-family: 'Courier New', monospace;
-				font-size: 12px;
-				z-index: 10000;
-				min-width: 250px;
-				backdrop-filter: blur(10px);
-			}
-
-			#performance-monitor h3 {
-				margin: 0 0 10px 0;
-				color: #fff;
-				font-size: 14px;
-			}
-
-			#performance-monitor .metric {
-				margin: 5px 0;
-				display: flex;
-				justify-content: space-between;
-			}
-
-			#performance-monitor .metric-label {
-				color: #aaa;
-			}
-
-			#performance-monitor .metric-value {
-				color: #0f0;
-				font-weight: bold;
-			}
-
-			#performance-monitor .metric-value.warning {
-				color: #ff0;
-			}
-
-			#performance-monitor .metric-value.critical {
-				color: #f00;
-			}
-
-			/* Section Styles */
-			.section {
+			#scrolly {
 				position: relative;
-				margin: 100vh 0;
-				padding: 50px 0;
-			}
-
-			.section-title {
-				text-align: center;
-				color: #fff;
-				font-size: 2.5rem;
-				margin-bottom: 50px;
-				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 			}
 
 			.scroll-container {
 				position: relative;
-				max-width: 1200px;
+				padding: 0 1rem;
 				margin: 0 auto;
-				padding: 0 20px;
+				width: 33%;
 			}
 
-			/* Step Styles */
 			.step {
-				margin: 4rem auto;
-				padding: 3rem;
-				background: rgba(255, 255, 255, 0.95);
-				border-radius: 20px;
-				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+				margin: 2rem auto 4rem auto;
+				background-color: var(--color-primary);
+				color: var(--color-white);
+				padding: var(--spacing-md);
+				border-radius: var(--border-radius);
 				position: relative;
-				overflow: hidden;
-				min-height: 300px;
-				transition: all 0.3s ease;
 			}
 
 			.step.is-active {
-				box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
-				transform: scale(1.02);
+				background-color: var(--color-accent);
+				color: var(--color-primary);
 			}
 
 			.step-number {
 				position: absolute;
-				top: 20px;
-				right: 20px;
-				width: 50px;
-				height: 50px;
-				background: #667eea;
-				color: #fff;
+				top: var(--spacing-xs);
+				right: var(--spacing-xs);
+				width: 2rem;
+				height: 2rem;
+				background: rgba(0, 0, 0, 0.2);
+				color: inherit;
 				border-radius: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				font-weight: bold;
-				font-size: 1.2rem;
+				font-size: 0.875rem;
 			}
 
-			.step-content {
-				position: relative;
-				z-index: 1;
+			.step.is-active .step-number {
+				background: rgba(0, 0, 0, 0.1);
 			}
 
 			.step-title {
-				font-size: 2rem;
-				margin-bottom: 1rem;
-				color: #333;
+				font-size: var(--font-size-lg);
+				margin-bottom: var(--spacing-xs);
+				font-weight: 600;
 			}
 
 			.step-description {
-				font-size: 1.1rem;
+				font-size: var(--font-size-base);
 				line-height: 1.6;
-				color: #666;
-				margin-bottom: 1.5rem;
+				margin-bottom: var(--spacing-sm);
+				opacity: 0.9;
 			}
 
 			.step-progress {
 				height: 4px;
-				background: rgba(102, 126, 234, 0.2);
+				background: rgba(0, 0, 0, 0.2);
 				border-radius: 2px;
-				margin-top: 1.5rem;
+				margin-top: var(--spacing-sm);
 				overflow: hidden;
+			}
+
+			.step.is-active .step-progress {
+				background: rgba(0, 0, 0, 0.1);
 			}
 
 			.step-progress-bar {
 				height: 100%;
-				background: linear-gradient(90deg, #667eea, #764ba2);
+				background: currentColor;
 				width: 0%;
 				transition: width 0.1s linear;
+			}
+
+			/* Performance Monitor */
+			#performance-monitor {
+				position: fixed;
+				top: var(--spacing-sm);
+				right: var(--spacing-sm);
+				background: var(--color-white);
+				border: 2px solid var(--color-primary);
+				border-radius: var(--border-radius);
+				padding: var(--spacing-sm);
+				font-family: 'Courier New', monospace;
+				font-size: 0.75rem;
+				z-index: 10000;
+				min-width: 200px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			#performance-monitor h3 {
+				margin: 0 0 var(--spacing-xs) 0;
+				color: var(--color-primary);
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+
+			#performance-monitor .metric {
+				margin: var(--spacing-xs) 0;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			#performance-monitor .metric-label {
+				color: var(--color-secondary);
+			}
+
+			#performance-monitor .metric-value {
+				color: var(--color-primary);
+				font-weight: bold;
+			}
+
+			#performance-monitor .metric-value.warning {
+				color: var(--color-accent);
+			}
+
+			#performance-monitor .metric-value.critical {
+				color: #d32f2f;
 			}
 		</style>
 	</head>
@@ -201,29 +185,18 @@
 				</div>
 			</div>
 
-			<!-- Section 1 -->
-			<section class="section" id="section-1">
-				<div class="section-title">Performance Test Section 1</div>
+			<section id="scrolly">
 				<div class="scroll-container" id="container-1">
 					<!-- Steps will be generated by JavaScript -->
 				</div>
-			</section>
-
-			<!-- Section 2 -->
-			<section class="section" id="section-2">
-				<div class="section-title">Performance Test Section 2</div>
 				<div class="scroll-container" id="container-2">
 					<!-- Steps will be generated by JavaScript -->
 				</div>
-			</section>
-
-			<!-- Section 3 -->
-			<section class="section" id="section-3">
-				<div class="section-title">Performance Test Section 3</div>
 				<div class="scroll-container" id="container-3">
 					<!-- Steps will be generated by JavaScript -->
 				</div>
 			</section>
+			<section id="outro"></section>
 		</main>
 
 		<script src="debug-utils.js"></script>
@@ -341,8 +314,7 @@
 					const step = document.createElement('div');
 					step.className = 'step';
 					step.innerHTML = `
-					<div class="step-number">${i + 1}</div>
-					<div class="step-content">
+						<div class="step-number">${i + 1}</div>
 						<h2 class="step-title">Section ${sectionNum} - Step ${i + 1}</h2>
 						<p class="step-description">
 							This is a performance test step with progress tracking enabled to stress test the callback system.
@@ -350,8 +322,7 @@
 						<div class="step-progress">
 							<div class="step-progress-bar"></div>
 						</div>
-					</div>
-				`;
+					`;
 					container.appendChild(step);
 					steps.push(step);
 				}
