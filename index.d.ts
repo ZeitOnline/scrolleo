@@ -28,7 +28,9 @@ declare namespace scrolleo {
 		direction: 'up' | 'down';
 	};
 
-	export type ScrolleoStepCallback = (response: ScrolleoCallbackResponse) => void;
+	export type ScrolleoStepCallback = (
+		response: ScrolleoCallbackResponse
+	) => void;
 	export type ScrolleoStepProgressCallback = (
 		response: ScrolleoProgressCallbackResponse
 	) => void;
@@ -37,7 +39,9 @@ declare namespace scrolleo {
 		setup: (options: ScrolleoOptions) => ScrolleoInstance;
 		onStepEnter: (callback: ScrolleoStepCallback) => ScrolleoInstance;
 		onStepExit: (callback: ScrolleoStepCallback) => ScrolleoInstance;
-		onStepProgress: (callback: ScrolleoStepProgressCallback) => ScrolleoInstance;
+		onStepProgress: (
+			callback: ScrolleoStepProgressCallback
+		) => ScrolleoInstance;
 		resize: () => ScrolleoInstance;
 		enable: () => ScrolleoInstance;
 		disable: () => ScrolleoInstance;

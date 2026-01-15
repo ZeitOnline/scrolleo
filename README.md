@@ -6,6 +6,7 @@ using IntersectionObserver.
 ## About
 
 Scrolleo is a modernization of [scrollama](https://github.com/russellsamora/scrollama) by [Russell Samora](https://github.com/russellsamora) with:
+
 - Several performance improvements
 - Modern ESM-only build using Vite
 - Improved TypeScript definitions
@@ -20,7 +21,6 @@ to handle element position detection.
 ## Examples
 
 TODO
-
 
 ## Installation
 
@@ -150,8 +150,6 @@ Removes all observers and callback functions.
 
 To override the offset passed in the options, set a custom offset for an individual element using data attributes. For example: `<div class="step" data-offset="0.25">` or `data-offset="100px"`.
 
-
-
 ## Alternatives
 
 - [scrollama](https://github.com/russellsamora/scrollama) (the original library)
@@ -164,7 +162,7 @@ To override the offset passed in the options, set a custom offset for an individ
 
 ## Credits
 
-This project is a modernization and rebrand of [scrollama](https://github.com/russellsamora/scrollama) by [Russell Samora](https://github.com/russellsamora). 
+This project is a modernization and rebrand of [scrollama](https://github.com/russellsamora/scrollama) by [Russell Samora](https://github.com/russellsamora).
 
 Original scrollama is licensed under the MIT License. This version maintains the same license and includes the original copyright notice. Scrolleo is maintained by [DIE ZEIT / ZeitOnline](https://github.com/ZeitOnline).
 

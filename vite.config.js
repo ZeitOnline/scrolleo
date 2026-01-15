@@ -5,7 +5,8 @@ export default defineConfig({
 		lib: {
 			entry: 'index.js',
 			name: 'scrolleo',
-			fileName: (format) => (format === 'es' ? 'scrolleo.js' : `scrolleo.${format}.js`),
+			fileName: (format) =>
+				format === 'es' ? 'scrolleo.js' : `scrolleo.${format}.js`,
 			formats: ['es'],
 		},
 		outDir: 'dist',
