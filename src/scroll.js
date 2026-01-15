@@ -1,25 +1,64 @@
-let previousScrollY;
-let currentScrollY;
-let comparisonScrollY;
-let direction;
+// WeakMap allows the container to be garbage collected if removed from DOM
+// The state contains: scroll listener, previous scrollY, direction, and reference count
+const scrollState = new WeakMap();
 
-function onScroll(container) {
-	const scrollTop = container ? container.scrollTop : window.pageYOffset;
-
-	if (currentScrollY === scrollTop) return;
-
-	previousScrollY = currentScrollY;
-	currentScrollY = scrollTop;
-	if (currentScrollY > comparisonScrollY) direction = "down";
-	else if (currentScrollY < comparisonScrollY) direction = "up";
-	comparisonScrollY = currentScrollY;
+function getScrollY(container) {
+	if (container === window) return window.scrollY;
+	return container.scrollTop;
 }
 
-function setupScroll(container) {
-	previousScrollY = 0;
-	currentScrollY = 0;
-	comparisonScrollY = 0;
-	document.addEventListener("scroll", () => onScroll(container));
+function updateScrollDirection(container) {
+	const state = scrollState.get(container);
+	if (!state) return;
+
+	const scrollY = getScrollY(container);
+	if (state.previousScrollY === scrollY) return;
+
+	if (scrollY > state.previousScrollY) state.direction = 'down';
+	else if (scrollY < state.previousScrollY) state.direction = 'up';
+	state.previousScrollY = scrollY;
 }
 
-export { setupScroll, onScroll, direction, previousScrollY, currentScrollY };
+function getDirection(container) {
+	const target = container || window;
+	const state = scrollState.get(target);
+	return state ? state.direction : 'down';
+}
+
+function addScrollListener(container) {
+	const target = container || window;
+
+	if (scrollState.has(target)) {
+		const state = scrollState.get(target);
+		// reference count to manage multiple listeners on the same container
+		state.count += 1;
+		return;
+	}
+
+	const listener = () => updateScrollDirection(target);
+	scrollState.set(target, {
+		listener,
+		previousScrollY: getScrollY(target),
+		direction: 'down',
+		count: 1,
+	});
+
+	target.addEventListener('scroll', listener, { passive: true });
+}
+
+function removeScrollListener(container) {
+	const target = container || window;
+
+	if (scrollState.has(target)) {
+		const state = scrollState.get(target);
+		state.count -= 1;
+
+		// only remove listener if no more references
+		if (state.count === 0) {
+			target.removeEventListener('scroll', state.listener);
+			scrollState.delete(target);
+		}
+	}
+}
+
+export { addScrollListener, removeScrollListener, getDirection };

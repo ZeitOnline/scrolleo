@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrolleo Demo: Nested Scroll Container</title>
+		<meta name="description" content="Scrolleo Demo: Nested scroll container" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			html,
+			body {
+				overflow: hidden;
+				height: 100vh;
+			}
+
+			body {
+				display: flex;
+				flex-direction: column;
+				margin: 0;
+				padding: 0;
+			}
+
+			main {
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				min-height: 0;
+			}
+
+			nav {
+				flex-shrink: 0;
+			}
+
+			#intro {
+				flex-shrink: 0;
+				margin-bottom: 1rem;
+				padding: 0 1rem;
+			}
+
+			.scroll-container {
+				flex: 1;
+				overflow-y: scroll;
+				overflow-x: hidden;
+				border: 3px solid var(--color-primary);
+				border-radius: var(--border-radius);
+				margin: 1rem;
+				background-color: var(--color-bg);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				position: relative;
+				min-height: 0;
+				max-height: 100%;
+				height: 0; /* Force flex to constrain height */
+			}
+
+			/* Force scrollbars to always be visible with padding from edges */
+			.scroll-container::-webkit-scrollbar {
+				width: 14px;
+			}
+
+			.scroll-container::-webkit-scrollbar-track {
+				background: transparent;
+				margin: calc(var(--border-radius) - 2px) 4px;
+			}
+
+			.scroll-container::-webkit-scrollbar-thumb {
+				background: var(--color-primary);
+				border-radius: 7px;
+				border: 2px solid var(--color-bg);
+			}
+
+			.scroll-container::-webkit-scrollbar-thumb:hover {
+				background: var(--color-secondary);
+			}
+
+			/* For Firefox */
+			.scroll-container {
+				scrollbar-width: thin;
+				scrollbar-color: var(--color-primary) transparent;
+			}
+
+			#scrolly {
+				position: relative;
+				padding: 2rem 0 4rem 0;
+			}
+
+			article {
+				position: relative;
+				padding: 0 1rem;
+				margin: 0 auto;
+				width: 33%;
+			}
+
+			.step {
+				margin: 2rem auto 4rem auto;
+				background-color: var(--color-primary);
+				color: var(--color-white);
+			}
+
+			.step.is-active {
+				background-color: var(--color-accent);
+				color: var(--color-primary);
+			}
+
+			.step p {
+				text-align: center;
+				padding: 1rem;
+				font-size: var(--font-size-lg);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">scrolleo.js</a>
+				<div class="nav__examples">
+					<p>Examples:</p>
+					<a href="basic.html">Basic</a>
+					<a href="progress.html">Progress</a>
+					<a href="sticky-side.html">Sticky Side</a>
+					<a href="sticky-overlay.html">Sticky Overlay</a>
+					<a href="percentage-offset.html">Percentage Offset</a>
+					<a href="pixel-offset.html">Pixel Offset</a>
+					<a href="multiple.html">Multiple Instances</a>
+					<a href="scroll-parent.html">Nested Scroll Container</a>
+					<a href="performance-test.html">Performance Test</a>
+				</div>
+			</nav>
+			<section id="intro">
+				<h1 class="intro__hed">Nested Scroll Container Example</h1>
+				<p class="intro__dek">
+					This example uses a nested scroll container instead of the window.
+					Only the container below scrolls, not the page itself.
+				</p>
+			</section>
+			<div class="scroll-container">
+				<section id="scrolly">
+					<article>
+						<div class="step" data-step="1">
+							<p>STEP 1</p>
+						</div>
+						<div class="step" data-step="2">
+							<p>STEP 2</p>
+						</div>
+						<div class="step" data-step="3">
+							<p>STEP 3</p>
+						</div>
+						<div class="step" data-step="4">
+							<p>STEP 4</p>
+						</div>
+					</article>
+				</section>
+			</div>
+		</main>
+
+		<script src="debug-utils.js"></script>
+		<script type="module">
+			import scrolleo from '../index.js';
+
+			const scrolly = document.querySelector('#scrolly');
+			const article = scrolly.querySelector('article');
+			const steps = article.querySelectorAll('.step');
+			const scrollContainer = document.querySelector('.scroll-container');
+
+			// Initialize scrolleo
+			const scroller = scrolleo();
+
+			// Setup options
+			const setupOptions = {
+				step: '#scrolly article .step',
+				debug: false,
+				offset: 0.5,
+				container: scrollContainer,
+			};
+
+			// Event handlers
+			function handleStepEnter(response) {
+				console.log(response);
+				response.element.classList.add('is-active');
+			}
+
+			function handleStepExit(response) {
+				console.log(response);
+				response.element.classList.remove('is-active');
+			}
+
+			function init() {
+				// Set consistent but different step heights
+				// Make steps tall enough to require scrolling in the container
+				const containerHeight =
+					scrollContainer.clientHeight || window.innerHeight * 0.5;
+				const baseHeight = containerHeight * 0.9; // Each step should be 90% of container height
+				const sizeMultipliers = [1.0, 1.2, 1.4, 1.6];
+				steps.forEach((step, index) => {
+					const h = baseHeight * (sizeMultipliers[index] || 1.0);
+					step.style.minHeight = Math.floor(h) + 'px';
+				});
+
+				// Setup scrolleo after heights are set
+				scroller
+					.setup(setupOptions)
+					.onStepEnter(handleStepEnter)
+					.onStepExit(handleStepExit);
+
+				// Handle window resize
+				window.addEventListener('resize', () => {
+					const newContainerHeight = scrollContainer.clientHeight;
+					const newBaseHeight = newContainerHeight * 0.9;
+					steps.forEach((step, index) => {
+						const h = newBaseHeight * (sizeMultipliers[index] || 1.0);
+						step.style.minHeight = Math.floor(h) + 'px';
+					});
+					scroller.resize();
+				});
+			}
+
+			// Initialize
+			init();
+		</script>
+	</body>
+</html>

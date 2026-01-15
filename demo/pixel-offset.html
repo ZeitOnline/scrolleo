@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrolleo Demo: Pixel Offset</title>
+		<meta
+			name="description"
+			content="Scrolleo Demo: Pixel-based offset customization"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			#scrolly {
+				position: relative;
+			}
+
+			article {
+				position: relative;
+				padding: 0 1rem;
+				margin: 0 auto;
+				width: 33%;
+			}
+
+			.step {
+				margin: 2rem auto 4rem auto;
+				background-color: var(--color-primary);
+				color: var(--color-white);
+				min-height: 600px;
+				height: 600px;
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.step.is-active {
+				background-color: var(--color-accent);
+				color: var(--color-primary);
+			}
+
+			.step p {
+				text-align: center;
+				padding: 1rem;
+				font-size: var(--font-size-lg);
+				margin: 0;
+			}
+
+			/* Fixed viewport trigger line */
+			#viewport-trigger-line {
+				position: fixed;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 2px;
+				background: #ff0;
+				box-shadow: 0 0 10px #ff0;
+				z-index: 9998;
+				pointer-events: none;
+			}
+
+			#viewport-trigger-line::before {
+				content: attr(data-offset-label);
+				position: absolute;
+				left: 20px;
+				top: -20px;
+				background: rgba(255, 255, 0, 0.9);
+				color: #000;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 0.75rem;
+				font-weight: bold;
+			}
+
+			/* Offset info badge */
+			.offset-info {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				background: rgba(0, 0, 0, 0.6);
+				color: #fff;
+				padding: 8px 12px;
+				border-radius: 4px;
+				font-size: 0.875rem;
+				font-weight: bold;
+			}
+
+			/* Scroll indicator */
+			#scroll-indicator {
+				height: 75vh;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+				background: linear-gradient(
+					180deg,
+					var(--color-bg) 0%,
+					rgba(255, 255, 255, 0) 100%
+				);
+			}
+
+			.scroll-hint {
+				font-size: 0.875rem;
+				color: var(--color-text-light);
+				margin-bottom: 1rem;
+				opacity: 0.6;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+			}
+
+			.scroll-arrow {
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				animation: bounce 2s infinite;
+			}
+
+			.scroll-arrow::after {
+				content: '↓';
+				font-size: 3rem;
+				color: var(--color-primary);
+				line-height: 0;
+				margin-top: -3em;
+			}
+
+			@keyframes bounce {
+				0%,
+				20%,
+				50%,
+				80%,
+				100% {
+					transform: translateY(0);
+				}
+				40% {
+					transform: translateY(10px);
+				}
+				60% {
+					transform: translateY(5px);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">scrolleo.js</a>
+				<div class="nav__examples">
+					<p>Examples:</p>
+					<a href="basic.html">Basic</a>
+					<a href="progress.html">Progress</a>
+					<a href="sticky-side.html">Sticky Side</a>
+					<a href="sticky-overlay.html">Sticky Overlay</a>
+					<a href="percentage-offset.html">Percentage Offset</a>
+					<a href="pixel-offset.html">Pixel Offset</a>
+					<a href="multiple.html">Multiple Instances</a>
+					<a href="scroll-parent.html">Nested Scroll Container</a>
+					<a href="performance-test.html">Performance Test</a>
+				</div>
+			</nav>
+			<section id="intro">
+				<h1 class="intro__hed">Pixel Offset Example</h1>
+				<p class="intro__dek">
+					This example uses pixel-based offsets instead of percentages. Pixel
+					offsets are fixed values that don't change with viewport height,
+					making them more predictable on mobile devices where viewport height
+					can change (e.g., when the address bar shows/hides). The yellow line
+					shows the trigger point.
+				</p>
+			</section>
+			<div id="scroll-indicator">
+				<div class="scroll-hint">scroll down</div>
+				<div class="scroll-arrow"></div>
+			</div>
+			<div id="viewport-trigger-line"></div>
+			<section id="scrolly">
+				<article>
+					<div class="step" data-step="1" data-offset="300px">
+						<div class="offset-info">Offset: 300px</div>
+						<p>STEP 1</p>
+						<p style="font-size: 0.875rem; margin-top: 0.5rem">
+							Triggers at 300px from top of viewport
+						</p>
+					</div>
+					<div class="step" data-step="2" data-offset="400px">
+						<div class="offset-info">Offset: 400px</div>
+						<p>STEP 2</p>
+						<p style="font-size: 0.875rem; margin-top: 0.5rem">
+							Triggers at 400px from top of viewport
+						</p>
+					</div>
+					<div class="step" data-step="3" data-offset="200px">
+						<div class="offset-info">Offset: 200px</div>
+						<p>STEP 3</p>
+						<p style="font-size: 0.875rem; margin-top: 0.5rem">
+							Triggers at 200px from top of viewport
+						</p>
+					</div>
+					<div class="step" data-step="4" data-offset="350px">
+						<div class="offset-info">Offset: 350px</div>
+						<p>STEP 4</p>
+						<p style="font-size: 0.875rem; margin-top: 0.5rem">
+							Triggers at 350px from top of viewport
+						</p>
+					</div>
+				</article>
+			</section>
+			<section id="outro"></section>
+		</main>
+
+		<script src="debug-utils.js"></script>
+		<script type="module">
+			import scrolleo from '../index.js';
+
+			const scrolly = document.querySelector('#scrolly');
+			const article = scrolly.querySelector('article');
+			const steps = article.querySelectorAll('.step');
+
+			// Initialize scrolleo
+			const scroller = scrolleo();
+
+			// Setup options - using a default pixel offset
+			// Each step can override with data-offset attribute
+			const defaultOffset = '300px';
+			const setupOptions = {
+				step: '#scrolly article .step',
+				debug: false,
+				offset: defaultOffset,
+			};
+
+			// Event handlers
+			function handleStepEnter(response) {
+				console.log(response);
+				response.element.classList.add('is-active');
+			}
+
+			function handleStepExit(response) {
+				console.log(response);
+				response.element.classList.remove('is-active');
+			}
+
+			function init() {
+				// Position the viewport trigger line at the default offset
+				const triggerLine = document.getElementById('viewport-trigger-line');
+				function updateTriggerLine() {
+					// Parse the default offset (e.g., "300px")
+					const offsetPx = parseInt(defaultOffset);
+					triggerLine.style.top = offsetPx + 'px';
+					triggerLine.setAttribute(
+						'data-offset-label',
+						`Trigger Line (${defaultOffset})`
+					);
+				}
+				updateTriggerLine();
+				window.addEventListener('resize', updateTriggerLine);
+
+				// Setup scrolleo
+				scroller
+					.setup(setupOptions)
+					.onStepEnter(handleStepEnter)
+					.onStepExit(handleStepExit);
+
+				// Create debug toggle with event handlers
+				createDebugToggle(scroller, setupOptions, {
+					onStepEnter: handleStepEnter,
+					onStepExit: handleStepExit,
+				});
+			}
+
+			// Initialize
+			init();
+		</script>
+	</body>
+</html>
