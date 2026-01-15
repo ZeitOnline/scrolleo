@@ -1,0 +1,27 @@
+name: publish
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: zon-ubuntu-general-dind
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@zeitonline'
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npm publish --access public
