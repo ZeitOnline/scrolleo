@@ -1,16 +1,23 @@
-# Scrolleo
-
-**Scrolleo** is a modern & lightweight JavaScript library for scrollytelling
-using IntersectionObserver.
+<div align="center">
+  <img src="scrolleo-mascot.svg" alt="Scrolleo" width="400">
+  
+  # Scrolleo
+  
+  **A modern & lightweight Vanilla JS library for scrollytelling experiences**
+  
+  [![npm version](https://img.shields.io/npm/v/@zeitonline/scrolleo.svg)](https://www.npmjs.com/package/@zeitonline/scrolleo)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  
+  No dependencies, no framework, pure ESM.
+</div>
 
 ## About
 
-Scrolleo is a modernization of [scrollama](https://github.com/russellsamora/scrollama) by [Russell Samora](https://github.com/russellsamora) with:
+Scrolleo is a modernization of [scrollama](https://github.com/russellsamora/scrollama) with:
 
-- Several performance improvements
-- Modern ESM-only build using Vite
+- Performance improvements
 - Improved TypeScript definitions
-- Updated build tooling and development workflow
+- A modern ESM-only build
 
 ## Why?
 
