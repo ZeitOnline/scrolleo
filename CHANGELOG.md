@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.2](https://github.com/ZeitOnline/scrolleo/compare/v1.0.1...v1.0.2) (2026-01-16)
+
+
+### 📝 Other Changes
+
+* add bootstrap-sha to prevent release-please from backfilling old commits ([ae258bf](https://github.com/ZeitOnline/scrolleo/commit/ae258bf888fed17b09f0e6fbb328475baa1a75b6))
+* disable npm provenance for self-hosted runners ([84a3dbf](https://github.com/ZeitOnline/scrolleo/commit/84a3dbf7731dfae9f384a2bb68465d79bd2ddbdf))
+* trigger publish workflow on tag push instead of release creation ([dae8f12](https://github.com/ZeitOnline/scrolleo/commit/dae8f122c12ff3e69d8b2e37ea3765748b58ae0a))
+* update bootstrap-sha to full SHA for release-please ([776562e](https://github.com/ZeitOnline/scrolleo/commit/776562e5caba2916bbde0d2b6fbe0756bee30b9a))
+* update CHANGELOG for v1.0.1 with actual changes ([269c450](https://github.com/ZeitOnline/scrolleo/commit/269c4505de9ceaaa31fb2de0840bc0f6147011a2))
+* update release-please configuration to not include component in tag ([160ebb1](https://github.com/ZeitOnline/scrolleo/commit/160ebb141dcf61be6b32e2b217e909c48bdcc7c9))
+
 ## [1.0.1](https://github.com/ZeitOnline/scrolleo/compare/v1.0.0...v1.0.1) (2026-01-16)
 
 ### 🐛 Bug Fixes
