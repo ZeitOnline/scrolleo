@@ -1,6 +1,6 @@
 {
 	"name": "@zeitonline/scrolleo",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Lightweight scrollytelling library using IntersectionObserver",
 	"type": "module",
 	"main": "./dist/scrolleo.js",
