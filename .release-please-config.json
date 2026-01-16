@@ -6,7 +6,7 @@
 			"package-name": "@zeitonline/scrolleo",
 			"changelog-path": "CHANGELOG.md",
 			"include-component-in-tag": false,
-			"bootstrap-sha": "7a71b62"
+			"bootstrap-sha": "7a71b6232d26ae7797a35cd276cdd8aca47521b0"
 		}
 	},
   "changelog-sections": [
