@@ -51,8 +51,9 @@
 
 			.step {
 				margin: 0 auto 2rem auto;
-				background-color: var(--color-primary);
+				background-color: var(--color-primary-red);
 				color: var(--color-white);
+				border-left: 4px solid var(--color-primary-red-dark);
 			}
 
 			.step:last-child {
@@ -62,6 +63,7 @@
 			.step.is-active {
 				background-color: var(--color-accent);
 				color: var(--color-primary);
+				border-left-color: var(--color-primary-red);
 			}
 
 			.step p {
@@ -74,7 +76,10 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrolleo.js</a>
+				<a href="index.html">
+					<img src="../scrolleo-mascot.svg" alt="Scrolleo mascot" class="nav-mascot" />
+					Scrolleo
+				</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>

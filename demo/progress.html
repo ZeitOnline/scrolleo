@@ -25,9 +25,14 @@
 			.step {
 				margin: 2rem auto 4rem auto;
 				padding: 1rem;
-				border: 2px solid var(--color-bg);
+				border: 2px solid var(--color-primary-red);
 				min-height: 300px;
 				position: relative;
+			}
+
+			.step.is-active {
+				border-color: var(--color-accent);
+				border-width: 2px;
 			}
 
 			.step p {
@@ -41,17 +46,25 @@
 				position: fixed;
 				top: 50%;
 				left: 50%;
-				transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%) skewX(-2deg);
 				color: var(--color-primary);
-				background: rgba(255, 255, 255, 0.85);
+				background: var(--color-white);
 				padding: 0.75rem 1.25rem;
-				border-radius: 20px;
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 				z-index: 1000;
 				pointer-events: none;
 				transition: opacity 0.3s ease;
 				text-align: center;
-				backdrop-filter: blur(10px);
+				border-left: 4px solid var(--color-primary-red);
+			}
+
+			#progress-indicator::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 3px;
+				background: linear-gradient(90deg, var(--color-primary-red), var(--color-accent));
 			}
 
 			#progress-indicator.hidden {
@@ -65,13 +78,15 @@
 				margin-bottom: 0.25rem;
 				text-transform: uppercase;
 				letter-spacing: 0.05em;
+				transform: skewX(2deg);
 			}
 
 			#progress-indicator .progress-value {
 				font-size: 1.5rem;
 				font-weight: 600;
 				line-height: 1;
-				color: var(--color-primary);
+				color: var(--color-primary-red);
+				transform: skewX(2deg);
 			}
 
 			#outro {
@@ -82,7 +97,10 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrolleo.js</a>
+				<a href="index.html">
+					<img src="../scrolleo-mascot.svg" alt="Scrolleo mascot" class="nav-mascot" />
+					Scrolleo
+				</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>

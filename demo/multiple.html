@@ -12,14 +12,14 @@
 		<link rel="stylesheet" href="style.css" />
 		<style>
 			#scroll {
-				background-color: #cdcdcd;
+				background-color: var(--color-bg-dark);
 				position: relative;
 				margin-top: 2rem;
 				margin-bottom: 2rem;
 			}
 
 			#scroll2 {
-				background-color: #cdcdcd;
+				background-color: var(--color-bg-dark);
 				position: relative;
 				margin-top: 2rem;
 				margin-bottom: 2rem;
@@ -33,13 +33,15 @@
 			.step {
 				max-width: 30rem;
 				margin: 2rem auto;
-				border: 2px solid var(--color-primary);
+				border: 2px solid var(--color-primary-red);
+				border-left-width: 4px;
 				background-color: var(--color-white);
 				min-height: 200px;
 			}
 
 			.step.is-active {
 				background-color: var(--color-accent);
+				border-color: var(--color-accent);
 			}
 
 			.step p {
@@ -51,7 +53,10 @@
 	<body>
 		<main>
 			<nav>
-				<a href="index.html">scrolleo.js</a>
+				<a href="index.html">
+					<img src="../scrolleo-mascot.svg" alt="Scrolleo mascot" class="nav-mascot" />
+					Scrolleo
+				</a>
 				<div class="nav__examples">
 					<p>Examples:</p>
 					<a href="basic.html">Basic</a>
