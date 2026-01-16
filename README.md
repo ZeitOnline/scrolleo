@@ -27,7 +27,17 @@ to handle element position detection.
 
 ## Examples
 
-TODO
+Check out the [demo gallery](demo/index.html) to see Scrolleo in action:
+
+- **[Basic](demo/basic.html)** - Basic step enter/exit functionality
+- **[Progress](demo/progress.html)** - Track scroll progress through steps with visual feedback
+- **[Sticky Side](demo/sticky-side.html)** - Sticky graphic on the side with scrolling text
+- **[Sticky Overlay](demo/sticky-overlay.html)** - Sticky graphic overlay pattern
+- **[Percentage Offset](demo/percentage-offset.html)** - Per-step offset customization using percentages
+- **[Pixel Offset](demo/pixel-offset.html)** - Fixed pixel-based offsets for mobile-friendly experiences
+- **[Multiple Instances](demo/multiple.html)** - Multiple scrolleo instances on the same page
+- **[Nested Scroll Container](demo/scroll-parent.html)** - Using a nested scroll container instead of window
+- **[Performance Test](demo/performance-test.html)** - Performance monitoring with multiple instances
 
 ## Installation
 
@@ -45,32 +55,57 @@ import scrolleo from '@zeitonline/scrolleo';
 
 #### Basic
 
-TODO
+Create step elements in your HTML:
 
 ```html
-<div class="step"></div>
-<div class="step"></div>
-<div class="step"></div>
+<section id="scrolly">
+	<article>
+		<div class="step">
+			<p>Step 1</p>
+		</div>
+		<div class="step">
+			<p>Step 2</p>
+		</div>
+		<div class="step">
+			<p>Step 3</p>
+		</div>
+	</article>
+</section>
 ```
+
+Then initialize Scrolleo and set up your callbacks:
 
 ```js
-// instantiate scrolleo
 import scrolleo from '@zeitonline/scrolleo';
 
+// Create a scrolleo instance
 const scroller = scrolleo();
 
-// setup the instance, pass callback functions
+// Setup with options and attach callbacks
 scroller
 	.setup({
-		step: '.step',
+		step: '#scrolly article .step',
+		offset: 0.5, // Trigger when step is 50% from top of viewport
+		debug: false, // Set to true to see visual debugging
 	})
 	.onStepEnter((response) => {
-		// const { element, index, direction } = response;
+		// Called when a step enters the offset threshold
+		const { element, index, direction } = response;
+		element.classList.add('is-active');
+		console.log(`Step ${index} entered from ${direction}`);
 	})
 	.onStepExit((response) => {
-		// const { element, index, direction } = response;
+		// Called when a step exits the offset threshold
+		const { element, index, direction } = response;
+		element.classList.remove('is-active');
+		console.log(`Step ${index} exited to ${direction}`);
 	});
 ```
+
+The `response` object contains:
+- `element`: The DOM element that triggered the callback
+- `index`: The zero-based index of the step
+- `direction`: Either `'up'` or `'down'` indicating scroll direction
 
 ## API
 
