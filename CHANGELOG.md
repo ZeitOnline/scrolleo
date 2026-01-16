@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ZeitOnline/scrolleo/compare/v1.0.2...v1.0.3) (2026-01-16)
+
+
+### 📝 Other Changes
+
+* combine release-please and publish into single release workflow ([8a4eb2c](https://github.com/ZeitOnline/scrolleo/commit/8a4eb2c199032e10803d1881c4b55b815bff49ac))
+
 ## [1.0.2](https://github.com/ZeitOnline/scrolleo/compare/v1.0.1...v1.0.2) (2026-01-16)
 
 
