@@ -1,8 +1,9 @@
 name: publish
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
@@ -13,6 +14,8 @@ jobs:
     runs-on: zon-ubuntu-general-dind
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
 
       - uses: actions/setup-node@v6
         with:
