@@ -24,7 +24,8 @@
 		"build": "vite build",
 		"demo": "vite --open demo/index.html",
 		"format": "prettier --write .",
-		"format:check": "prettier --check ."
+		"format:check": "prettier --check .",
+		"prepublishOnly": "npm run build"
 	},
 	"repository": {
 		"type": "git",
