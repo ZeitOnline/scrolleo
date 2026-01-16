@@ -1,0 +1,66 @@
+name: Release and Publish
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-please:
+    runs-on: zon-ubuntu-general-dind
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: .release-please-config.json
+
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    runs-on: zon-ubuntu-general-dind
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@zeitonline'
+      
+      - name: Check if version already published
+        id: check_version
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Checking if $PACKAGE_NAME@$VERSION already exists on npm..."
+          if npm view "$PACKAGE_NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "published=true" >> $GITHUB_OUTPUT
+            echo "⏭️ $PACKAGE_NAME@$VERSION already published, skipping"
+          else
+            echo "published=false" >> $GITHUB_OUTPUT
+            echo "✅ $PACKAGE_NAME@$VERSION not found on npm, will publish"
+          fi
+      
+      - name: Install dependencies
+        if: steps.check_version.outputs.published == 'false'
+        run: npm ci
+      
+      - name: Build
+        if: steps.check_version.outputs.published == 'false'
+        run: npm run build
+      
+      - name: Publish to npm
+        if: steps.check_version.outputs.published == 'false'
+        run: npm publish --access public --provenance=false
