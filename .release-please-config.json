@@ -3,7 +3,8 @@
 	"packages": {
 		".": {
 			"release-type": "node",
-			"package-name": "@zeitonline/scrolleo"
+			"package-name": "@zeitonline/scrolleo",
+			"changelog-path": "CHANGELOG.md"
 		}
 	},
   "changelog-sections": [

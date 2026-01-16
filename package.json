@@ -17,7 +17,8 @@
 		"dist",
 		"index.d.ts",
 		"README.md",
-		"LICENSE"
+		"LICENSE",
+		"CHANGELOG.md"
 	],
 	"scripts": {
 		"dev": "vite build --watch",
