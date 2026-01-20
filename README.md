@@ -27,7 +27,7 @@ to handle element position detection.
 
 ## Examples
 
-Check out the [demo gallery](demo/index.html) to see Scrolleo in action:
+[View the demo gallery on GitHub Pages](https://zeitonline.github.io/scrolleo/) and checkout the source code of the examples in the [demo folder](demo/):
 
 - **[Basic](demo/basic.html)** - Basic step enter/exit functionality
 - **[Progress](demo/progress.html)** - Track scroll progress through steps with visual feedback
