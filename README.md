@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="scrolleo-mascot.svg" alt="Scrolleo" width="400">
+  <img src="demo/scrolleo-mascot.svg" alt="Scrolleo Mascot" width="400">
   
   # Scrolleo
   

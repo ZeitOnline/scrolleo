@@ -23,7 +23,7 @@
 	"scripts": {
 		"dev": "vite build --watch",
 		"build": "vite build",
-		"demo": "vite --open demo/index.html",
+		"demo": "npm run build && node -e \"require('fs').cpSync('dist', 'demo/dist', {recursive: true, force: true})\" && vite --open demo/index.html",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"prepublishOnly": "npm run build"
