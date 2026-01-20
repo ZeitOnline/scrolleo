@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrolleo</title>
+		<meta
+			name="description"
+			content="Scrolleo - interactive demo gallery showcasing library capabilities"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			body {
+				background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg) 100%);
+				min-height: 100vh;
+			}
+
+			.hero {
+				text-align: center;
+				padding: var(--spacing-xl) var(--spacing-sm);
+				background: var(--color-white);
+				margin-bottom: var(--spacing-xl);
+				position: relative;
+			}
+
+			.hero-arrow {
+				position: absolute;
+				bottom: var(--spacing-md);
+				left: 50%;
+				transform: translateX(-50%);
+				width: 40px;
+				height: 40px;
+				opacity: 0.7;
+				animation: pulse-arrow 2s ease-in-out infinite;
+			}
+
+			.hero-arrow svg {
+				width: 100%;
+				height: 100%;
+				fill: var(--color-primary-red);
+			}
+
+			@keyframes pulse-arrow {
+				0%, 100% {
+					opacity: 0.7;
+					transform: translateX(-50%) translateY(0);
+				}
+				50% {
+					opacity: 1;
+					transform: translateX(-50%) translateY(10px);
+				}
+			}
+
+			.hero .mascot {
+				width: 400px;
+				height: auto;
+				margin-bottom: var(--spacing-md);
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.hero h1 {
+				font-size: 3rem;
+				margin-bottom: var(--spacing-sm);
+				color: var(--color-primary);
+				font-weight: 600;
+				letter-spacing: -0.02em;
+				position: relative;
+				display: inline-block;
+			}
+
+			.hero h1::after {
+				content: '';
+				position: absolute;
+				bottom: -0.5rem;
+				left: 50%;
+				transform: translateX(-50%) skewX(-2deg);
+				width: 60%;
+				height: 4px;
+				background: var(--color-accent);
+			}
+
+			.hero p {
+				font-size: var(--font-size-lg);
+				color: var(--color-text-light);
+				max-width: 600px;
+				margin: 0 auto;
+				line-height: 1.7;
+			}
+
+			.demo-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: var(--spacing-md);
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: var(--spacing-md);
+			}
+
+			.demo-card {
+				background: var(--color-white);
+				padding: var(--spacing-md);
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				text-decoration: none;
+				color: inherit;
+				display: block;
+				position: relative;
+				transform: skewX(-2deg);
+				border-bottom: none;
+			}
+
+			.demo-card::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 4px;
+				background: var(--color-primary-red);
+				transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			.demo-card:nth-child(even) {
+				transform: skewX(2deg);
+			}
+
+			.demo-card:nth-child(even)::before {
+				background: var(--color-accent);
+			}
+
+			.demo-card:hover {
+				transform: skewX(-2deg) translateY(-6px);
+				opacity: 1;
+				color: inherit;
+			}
+
+			.demo-card:hover::before {
+				width: 8px;
+			}
+
+			.demo-card:nth-child(even):hover {
+				transform: skewX(2deg) translateY(-6px);
+			}
+
+			.demo-card:hover h3 {
+				color: var(--color-primary);
+			}
+
+			.demo-card:hover p {
+				color: var(--color-text-light);
+			}
+
+			.demo-card > * {
+				transform: skewX(2deg);
+			}
+
+			.demo-card:nth-child(even) > * {
+				transform: skewX(-2deg);
+			}
+
+			.demo-card h3 {
+				font-size: var(--font-size-lg);
+				margin-bottom: var(--spacing-xs);
+				color: var(--color-primary);
+				font-weight: 600;
+				letter-spacing: -0.02em;
+			}
+
+			.demo-card p {
+				font-size: var(--font-size-base);
+				color: var(--color-text-light);
+				margin: 0;
+				line-height: 1.6;
+			}
+
+			.demo-card .demo-badge {
+				display: inline-block;
+				background: var(--color-primary-red);
+				color: var(--color-white);
+				padding: 0.25rem 0.75rem;
+				font-size: 0.75rem;
+				font-weight: 600;
+				margin-top: var(--spacing-xs);
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+
+			.section-title {
+				text-align: center;
+				font-size: var(--font-size-xl);
+				margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+				color: var(--color-primary);
+				font-weight: 600;
+				letter-spacing: -0.02em;
+				position: relative;
+				display: inline-block;
+				width: 100%;
+			}
+
+			.section-title::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%) skewX(-2deg);
+				bottom: -0.5rem;
+				width: 80px;
+				height: 4px;
+				background: var(--color-primary-red);
+			}
+
+			.tests-section {
+				margin-top: var(--spacing-xl);
+				padding-top: var(--spacing-xl);
+				position: relative;
+			}
+
+			.tests-section::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%) skewX(2deg);
+				width: 200px;
+				height: 4px;
+				background: var(--color-accent);
+			}
+
+			.tests-section .demo-card {
+				opacity: 0.9;
+			}
+
+			.tests-section .demo-card:hover {
+				opacity: 1;
+			}
+
+			@media (max-width: 768px) {
+				.hero .mascot {
+					width: 250px;
+				}
+
+				.hero h1 {
+					font-size: 2rem;
+				}
+
+				.hero-arrow {
+					width: 32px;
+					height: 32px;
+					bottom: var(--spacing-sm);
+				}
+
+				.demo-grid {
+					grid-template-columns: 1fr;
+					padding: var(--spacing-sm);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">
+					<img src="scrolleo-mascot.svg" alt="Scrolleo mascot" class="nav-mascot" />
+					Scrolleo
+				</a>
+				<div class="nav__examples">
+					<p>Demo Gallery</p>
+				</div>
+			</nav>
+
+			<section class="hero">
+				<img src="scrolleo-mascot.svg" alt="Scrolleo mascot" class="mascot" />
+				<h1>Scrolleo</h1>
+				<p>
+					A lightweight & performant scrollytelling library. <br />
+					This is a demo gallery showcasing its capabilities.
+				</p>
+				<div class="hero-arrow">
+					<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 20l-8-8h5V4h6v8h5l-8 8z"/>
+					</svg>
+				</div>
+			</section>
+
+			<h2 class="section-title">Showcase Demos</h2>
+			<div class="demo-grid">
+				<a href="basic.html" class="demo-card">
+					<h3>Basic</h3>
+					<p>
+						Basic step enter/exit functionality. The foundation of Scrolleo.
+					</p>
+				</a>
+
+				<a href="progress.html" class="demo-card">
+					<h3>Progress</h3>
+					<p>
+						Track scroll progress through steps with visual feedback and
+						animations.
+					</p>
+				</a>
+
+				<a href="sticky-side.html" class="demo-card">
+					<h3>Sticky Side</h3>
+					<p>
+						Sticky graphic on the side with scrolling text - a common
+						scrollytelling pattern.
+					</p>
+				</a>
+
+				<a href="sticky-overlay.html" class="demo-card">
+					<h3>Sticky Overlay</h3>
+					<p>Sticky graphic overlay pattern with text scrolling over it.</p>
+				</a>
+
+				<a href="percentage-offset.html" class="demo-card">
+					<h3>Percentage Offset</h3>
+					<p>
+						Per-step offset customization using percentage values (0 = top, 0.5
+						= middle, 1 = bottom).
+					</p>
+				</a>
+
+				<a href="pixel-offset.html" class="demo-card">
+					<h3>Pixel Offset</h3>
+					<p>
+						Fixed pixel-based offsets that don't change with viewport height,
+						ideal for mobile devices.
+					</p>
+				</a>
+
+				<a href="multiple.html" class="demo-card">
+					<h3>Multiple Instances</h3>
+					<p>
+						Multiple scrolleo instances working independently on the same page.
+					</p>
+				</a>
+
+				<a href="scroll-parent.html" class="demo-card">
+					<h3>Nested Scroll Container</h3>
+					<p>Use a nested scroll container instead of the window element.</p>
+				</a>
+
+				<a href="performance-test.html" class="demo-card">
+					<h3>Performance Test</h3>
+					<p>
+						Performance monitoring demo with multiple instances and progress
+						tracking.
+					</p>
+				</a>
+			</div>
+		</main>
+	</body>
+</html>

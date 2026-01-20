@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Scrolleo Demo: Performance Test</title>
+		<meta
+			name="description"
+			content="Scrolleo Demo: Performance monitoring with multiple instances"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="style.css" />
+		<style>
+			#scrolly {
+				position: relative;
+			}
+
+			.scroll-container {
+				position: relative;
+				padding: 0 1rem;
+				margin: 0 auto;
+				width: 33%;
+			}
+
+			.step {
+				margin: 2rem auto 4rem auto;
+				background-color: var(--color-primary-red);
+				color: var(--color-white);
+				padding: var(--spacing-md);
+				border-radius: var(--border-radius);
+				position: relative;
+				border-left: 4px solid var(--color-primary-red-dark);
+			}
+
+			.step.is-active {
+				background-color: var(--color-accent);
+				color: var(--color-primary);
+				border-left-color: var(--color-primary-red);
+			}
+
+			.step-number {
+				position: absolute;
+				top: var(--spacing-xs);
+				right: var(--spacing-xs);
+				width: 2rem;
+				height: 2rem;
+				background: rgba(0, 0, 0, 0.2);
+				color: inherit;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 0.875rem;
+			}
+
+			.step.is-active .step-number {
+				background: rgba(0, 0, 0, 0.1);
+			}
+
+			.step-title {
+				font-size: var(--font-size-lg);
+				margin-bottom: var(--spacing-xs);
+				font-weight: 600;
+			}
+
+			.step-description {
+				font-size: var(--font-size-base);
+				line-height: 1.6;
+				margin-bottom: var(--spacing-sm);
+				opacity: 0.9;
+			}
+
+			.step-progress {
+				height: 4px;
+				background: rgba(33, 30, 30, 0.2);
+				border-radius: 2px;
+				margin-top: var(--spacing-sm);
+				overflow: hidden;
+			}
+
+			.step.is-active .step-progress {
+				background: rgba(33, 30, 30, 0.1);
+			}
+
+			.step-progress-bar {
+				height: 100%;
+				background: currentColor;
+				width: 0%;
+				transition: width 0.1s linear;
+			}
+
+			/* Performance Monitor */
+			#performance-monitor {
+				position: fixed;
+				top: var(--spacing-sm);
+				right: var(--spacing-sm);
+				background: var(--color-white);
+				border: 2px solid var(--color-primary);
+				border-radius: var(--border-radius);
+				padding: var(--spacing-sm);
+				font-family: 'Courier New', monospace;
+				font-size: 0.75rem;
+				z-index: 10000;
+				min-width: 200px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			#performance-monitor h3 {
+				margin: 0 0 var(--spacing-xs) 0;
+				color: var(--color-primary);
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+
+			#performance-monitor .metric {
+				margin: var(--spacing-xs) 0;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			#performance-monitor .metric-label {
+				color: var(--color-secondary);
+			}
+
+			#performance-monitor .metric-value {
+				color: var(--color-primary);
+				font-weight: bold;
+			}
+
+			#performance-monitor .metric-value.warning {
+				color: var(--color-accent);
+			}
+
+			#performance-monitor .metric-value.critical {
+				color: var(--color-primary-red);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<nav>
+				<a href="index.html">
+					<img src="scrolleo-mascot.svg" alt="Scrolleo mascot" class="nav-mascot" />
+					Scrolleo
+				</a>
+				<div class="nav__examples">
+					<p>Examples:</p>
+					<a href="basic.html">Basic</a>
+					<a href="progress.html">Progress</a>
+					<a href="sticky-side.html">Sticky Side</a>
+					<a href="sticky-overlay.html">Sticky Overlay</a>
+					<a href="percentage-offset.html">Percentage Offset</a>
+					<a href="pixel-offset.html">Pixel Offset</a>
+					<a href="multiple.html">Multiple Instances</a>
+					<a href="scroll-parent.html">Nested Scroll Container</a>
+					<a href="performance-test.html">Performance Test</a>
+				</div>
+			</nav>
+			<section id="intro">
+				<h1 class="intro__hed">Performance Test</h1>
+				<p class="intro__dek">
+					This demo tests scrolleo performance with multiple instances and many
+					steps. Monitor FPS, frame time, and callback rates in real-time.
+				</p>
+			</section>
+
+			<!-- Performance Monitor -->
+			<div id="performance-monitor">
+				<h3>Performance Monitor</h3>
+				<div class="metric">
+					<span class="metric-label">FPS:</span>
+					<span class="metric-value" id="fps">--</span>
+				</div>
+				<div class="metric">
+					<span class="metric-label">Frame Time:</span>
+					<span class="metric-value" id="frame-time">--</span>
+				</div>
+				<div class="metric">
+					<span class="metric-label">Callbacks/sec:</span>
+					<span class="metric-value" id="callbacks-per-sec">--</span>
+				</div>
+				<div class="metric">
+					<span class="metric-label">Active Steps:</span>
+					<span class="metric-value" id="active-steps">--</span>
+				</div>
+				<div class="metric">
+					<span class="metric-label">Memory (MB):</span>
+					<span class="metric-value" id="memory">--</span>
+				</div>
+			</div>
+
+			<section id="scrolly">
+				<div class="scroll-container" id="container-1">
+					<!-- Steps will be generated by JavaScript -->
+				</div>
+				<div class="scroll-container" id="container-2">
+					<!-- Steps will be generated by JavaScript -->
+				</div>
+				<div class="scroll-container" id="container-3">
+					<!-- Steps will be generated by JavaScript -->
+				</div>
+			</section>
+			<section id="outro"></section>
+		</main>
+
+		<script src="debug-utils.js"></script>
+		<script type="module">
+			import scrolleo from './dist/scrolleo.js';
+
+			// Performance monitoring
+			const perfMonitor = {
+				fps: 0,
+				frameTime: 0,
+				callbacksPerSecond: 0,
+				activeSteps: 0,
+				memory: 0,
+
+				callbackCount: 0,
+				lastCallbackReset: Date.now(),
+				lastFrameTime: performance.now(),
+				frameCount: 0,
+				frameStartTime: performance.now(),
+
+				init() {
+					this.updateDisplay();
+					this.startFPSMonitor();
+					this.startMemoryMonitor();
+					setInterval(() => this.updateDisplay(), 100);
+				},
+
+				startFPSMonitor() {
+					const measureFPS = () => {
+						const now = performance.now();
+						const delta = now - this.lastFrameTime;
+						this.frameCount++;
+
+						if (delta >= 1000) {
+							this.fps = Math.round((this.frameCount * 1000) / delta);
+							this.frameTime = Math.round(delta / this.frameCount);
+							this.frameCount = 0;
+							this.lastFrameTime = now;
+						}
+
+						requestAnimationFrame(measureFPS);
+					};
+					requestAnimationFrame(measureFPS);
+				},
+
+				startMemoryMonitor() {
+					if (performance.memory) {
+						setInterval(() => {
+							this.memory = Math.round(
+								performance.memory.usedJSHeapSize / 1048576
+							);
+						}, 1000);
+					}
+				},
+
+				recordCallback() {
+					this.callbackCount++;
+					const now = Date.now();
+					if (now - this.lastCallbackReset >= 1000) {
+						this.callbacksPerSecond = this.callbackCount;
+						this.callbackCount = 0;
+						this.lastCallbackReset = now;
+					}
+				},
+
+				updateActiveSteps(count) {
+					this.activeSteps = count;
+				},
+
+				updateDisplay() {
+					const updateMetric = (id, value, unit = '') => {
+						const el = document.getElementById(id);
+						if (el) {
+							el.textContent = value !== undefined ? value + unit : '--';
+
+							// Add warning/critical classes
+							el.classList.remove('warning', 'critical');
+							if (id === 'fps' && value < 30) {
+								el.classList.add('critical');
+							} else if (id === 'fps' && value < 50) {
+								el.classList.add('warning');
+							} else if (id === 'frame-time' && value > 33) {
+								el.classList.add('critical');
+							} else if (id === 'frame-time' && value > 20) {
+								el.classList.add('warning');
+							} else if (id === 'callbacks-per-sec' && value > 500) {
+								el.classList.add('critical');
+							} else if (id === 'callbacks-per-sec' && value > 200) {
+								el.classList.add('warning');
+							}
+						}
+					};
+
+					updateMetric('fps', this.fps);
+					updateMetric('frame-time', this.frameTime, 'ms');
+					updateMetric('callbacks-per-sec', this.callbacksPerSecond);
+					updateMetric('active-steps', this.activeSteps);
+					updateMetric('memory', this.memory, ' MB');
+				},
+			};
+
+			// Configuration
+			const CONFIG = {
+				numSections: 3,
+				stepsPerSection: 15,
+				progressThreshold: 4,
+			};
+
+			// Generate steps for a container
+			function generateSteps(containerId, sectionNum) {
+				const container = document.getElementById(containerId);
+				const steps = [];
+
+				for (let i = 0; i < CONFIG.stepsPerSection; i++) {
+					const step = document.createElement('div');
+					step.className = 'step';
+					step.innerHTML = `
+						<div class="step-number">${i + 1}</div>
+						<h2 class="step-title">Section ${sectionNum} - Step ${i + 1}</h2>
+						<p class="step-description">
+							This is a performance test step with progress tracking enabled to stress test the callback system.
+						</p>
+						<div class="step-progress">
+							<div class="step-progress-bar"></div>
+						</div>
+					`;
+					container.appendChild(step);
+					steps.push(step);
+				}
+
+				return steps;
+			}
+
+			// Create scrolleo instances
+			const scrollers = [];
+			let activeStepsCount = 0;
+
+			function initScrolleo() {
+				// Generate all steps
+				for (let i = 1; i <= CONFIG.numSections; i++) {
+					generateSteps(`container-${i}`, i);
+				}
+
+				// Create scrolleo instances for each section
+				for (let i = 1; i <= CONFIG.numSections; i++) {
+					const scroller = scrolleo();
+					const setupOptions = {
+						step: `#container-${i} .step`,
+						progress: true,
+						threshold: CONFIG.progressThreshold,
+						offset: 0.5,
+						debug: false,
+					};
+
+					const handlers = {
+						onStepEnter: (response) => {
+							perfMonitor.recordCallback();
+							response.element.classList.add('is-active');
+							activeStepsCount++;
+							perfMonitor.updateActiveSteps(activeStepsCount);
+						},
+						onStepExit: (response) => {
+							perfMonitor.recordCallback();
+							response.element.classList.remove('is-active');
+							activeStepsCount--;
+							perfMonitor.updateActiveSteps(activeStepsCount);
+						},
+						onStepProgress: (response) => {
+							perfMonitor.recordCallback();
+							const progressBar =
+								response.element.querySelector('.step-progress-bar');
+							if (progressBar) {
+								progressBar.style.width = response.progress * 100 + '%';
+							}
+						},
+					};
+
+					scroller
+						.setup(setupOptions)
+						.onStepEnter(handlers.onStepEnter)
+						.onStepExit(handlers.onStepExit)
+						.onStepProgress(handlers.onStepProgress);
+
+					scrollers.push({ scroller, setupOptions, handlers });
+				}
+
+				// Handle window resize
+				let resizeTimeout;
+				window.addEventListener('resize', () => {
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(() => {
+						scrollers.forEach(({ scroller }) => scroller.resize());
+					}, 100);
+				});
+
+				// Create debug toggle for first instance (all instances will share debug state)
+				if (scrollers.length > 0) {
+					const firstInstance = scrollers[0];
+					const toggle = createDebugToggle(
+						firstInstance.scroller,
+						firstInstance.setupOptions,
+						firstInstance.handlers
+					);
+
+					// Override toggle to update all instances
+					const originalToggle = toggle.toggle;
+					toggle.toggle = function () {
+						const newDebug = !toggle.isEnabled();
+						scrollers.forEach(({ scroller, setupOptions, handlers }) => {
+							scroller.setup({ ...setupOptions, debug: newDebug });
+							scroller.onStepEnter(handlers.onStepEnter);
+							scroller.onStepExit(handlers.onStepExit);
+							scroller.onStepProgress(handlers.onStepProgress);
+							scroller.resize();
+						});
+						originalToggle();
+					};
+				}
+
+				console.log(`Performance test initialized:`);
+				console.log(`- ${CONFIG.numSections} scrolleo instances`);
+				console.log(
+					`- ${CONFIG.numSections * CONFIG.stepsPerSection} total steps`
+				);
+				console.log(`- Progress tracking enabled on all instances`);
+			}
+
+			// Initialize performance monitoring
+			perfMonitor.init();
+
+			// Initialize scrolleo after DOM is ready
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initScrolleo);
+			} else {
+				initScrolleo();
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,219 @@
+/* Modern CSS Reset and Base Styles */
+* {
+	box-sizing: border-box;
+}
+
+:root {
+	/* Color Palette - Based on Scrolleo Mascot */
+	/* Dark Colors */
+	--color-dark: #211e1e;
+	--color-dark-red: #a42421;
+	
+	/* Primary Colors */
+	--color-primary: #211e1e;
+	--color-primary-red: #da342c;
+	--color-primary-red-dark: #a42421;
+	
+	/* Accent Colors */
+	--color-accent: #f0a430;
+	--color-accent-gold: #f0a430;
+	
+	/* Background Colors */
+	--color-bg: #f4ebcc;
+	--color-bg-light: #fefefd;
+	--color-bg-dark: #f3f3f3;
+	
+	/* Text Colors */
+	--color-text: #211e1e;
+	--color-text-light: #8a8a8a;
+	--color-text-muted: #6b6b6b;
+	
+	/* Utility Colors */
+	--color-white: #fefefd;
+	--color-black: #211e1e;
+	--color-secondary: #8a8a8a;
+	
+	/* Spacing */
+	--spacing-xs: 0.5rem;
+	--spacing-sm: 1rem;
+	--spacing-md: 2rem;
+	--spacing-lg: 4rem;
+	--spacing-xl: 8rem;
+	
+	/* Typography */
+	--font-size-base: 1rem;
+	--font-size-lg: 1.5rem;
+	--font-size-xl: 2rem;
+	
+	/* Shadows */
+	--shadow-sm: 0 2px 4px rgba(33, 30, 30, 0.1);
+	--shadow-md: 0 2px 8px rgba(33, 30, 30, 0.1);
+	--shadow-lg: 0 4px 16px rgba(33, 30, 30, 0.15);
+	
+	/* Other */
+	--border-radius: 8px;
+	--transition: 0.2s ease;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	min-height: 100vh;
+	color: var(--color-text);
+	font-size: var(--font-size-base);
+	line-height: 1.6;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+	font-weight: 400;
+}
+
+a {
+	color: var(--color-primary);
+	text-decoration: none;
+	border-bottom: 2px solid currentColor;
+	transition: opacity var(--transition);
+}
+
+a:hover {
+	opacity: 0.7;
+}
+
+/* Navigation */
+nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--color-white);
+	padding: var(--spacing-sm);
+	flex-wrap: wrap;
+	gap: var(--spacing-sm);
+	position: relative;
+}
+
+nav::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--color-primary-red), var(--color-accent));
+}
+
+nav > a {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+	border-bottom: none;
+}
+
+nav > a .nav-mascot {
+	height: 1.5rem;
+	width: auto;
+	vertical-align: middle;
+	display: block;
+	margin: 0 -0.25rem;
+	object-fit: contain;
+}
+
+.nav__examples {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--spacing-xs);
+}
+
+.nav__examples > * {
+	margin-right: var(--spacing-xs);
+}
+
+/* Intro Section */
+#intro {
+	max-width: 40rem;
+	margin: var(--spacing-md) auto;
+	text-align: center;
+}
+
+.intro__hed {
+	font-size: var(--font-size-xl);
+	margin: var(--spacing-md) auto var(--spacing-xs) auto;
+}
+
+.intro__dek {
+	color: var(--color-text-light);
+	font-size: var(--font-size-base);
+}
+
+/* Demo Sections */
+#scrolly {
+	position: relative;
+}
+
+#outro {
+	height: 640px;
+}
+
+/* Debug Toggle Button */
+.debug-toggle {
+	position: fixed;
+	bottom: var(--spacing-sm);
+	left: var(--spacing-sm);
+	z-index: 10000;
+	background: var(--color-white);
+	border: 2px solid var(--color-primary-red);
+	border-radius: var(--border-radius);
+	padding: var(--spacing-xs) var(--spacing-sm);
+	font-size: 0.875rem;
+	cursor: pointer;
+	transition: all var(--transition);
+	box-shadow: 0 2px 4px rgba(33, 30, 30, 0.1);
+	color: var(--color-text);
+}
+
+.debug-toggle:hover {
+	background: var(--color-bg);
+	border-color: var(--color-primary-red-dark);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(33, 30, 30, 0.15);
+}
+
+.debug-toggle.active {
+	background: var(--color-primary-red);
+	color: var(--color-white);
+	border-color: var(--color-primary-red);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	:root {
+		--font-size-base: 0.875rem;
+		--font-size-lg: 1.25rem;
+		--font-size-xl: 1.5rem;
+	}
+
+	nav {
+		flex-direction: column;
+	}
+}
+
+@media (min-width: 840px) {
+	.nav__examples {
+		margin-top: 0;
+		margin-left: var(--spacing-md);
+	}
+}
