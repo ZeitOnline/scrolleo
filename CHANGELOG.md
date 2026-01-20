@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4](https://github.com/ZeitOnline/scrolleo/compare/v1.0.3...v1.0.4) (2026-01-20)
+
+
+### 📝 Other Changes
+
+* enable GitHub Pages deployment of demos ([bd1b96e](https://github.com/ZeitOnline/scrolleo/commit/bd1b96e7c54809581053aeab155c2e94b0af8538))
+* Update Readme ([5330b61](https://github.com/ZeitOnline/scrolleo/commit/5330b61aaecd3676bc8267df629feafa84db8757))
+
 ## [1.0.3](https://github.com/ZeitOnline/scrolleo/compare/v1.0.2...v1.0.3) (2026-01-16)
 
 
