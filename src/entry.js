@@ -151,7 +151,7 @@ function scrolleo() {
 		entries.forEach((entry) => {
 			const index = getIndex(entry.target);
 			const step = steps[index];
-			const h = entry.target.offsetHeight;
+			const h = Math.round(entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height);
 			if (h !== step.height) {
 				step.height = h;
 				resizeBatch.add(step);
