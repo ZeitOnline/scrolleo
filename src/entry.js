@@ -34,10 +34,12 @@ function scrolleo() {
 	// Batch progress callbacks with requestAnimationFrame
 	let pendingProgressCallbacks = new Map();
 	let rafScheduled = false;
+	let rafId = null;
 
 	// Batch resize observer updates with requestAnimationFrame
 	let resizeBatch = new Set();
 	let resizeRafScheduled = false;
+	let resizeRafId = null;
 
 	/* HELPERS */
 	function reset() {
@@ -49,8 +51,10 @@ function scrolleo() {
 		exclude = [];
 		pendingProgressCallbacks.clear();
 		rafScheduled = false;
+		rafId = null;
 		resizeBatch.clear();
 		resizeRafScheduled = false;
+		resizeRafId = null;
 	}
 
 	function handleEnable(shouldEnable) {
@@ -61,6 +65,7 @@ function scrolleo() {
 
 	function flushProgressCallbacks() {
 		rafScheduled = false;
+		rafId = null;
 		pendingProgressCallbacks.forEach(
 			({ element, index, progress, direction, step }) => {
 				// Update step progress value
@@ -92,7 +97,7 @@ function scrolleo() {
 		// Schedule requestAnimationFrame if not already scheduled
 		if (!rafScheduled) {
 			rafScheduled = true;
-			requestAnimationFrame(flushProgressCallbacks);
+			rafId = requestAnimationFrame(flushProgressCallbacks);
 		}
 	}
 
@@ -140,6 +145,7 @@ function scrolleo() {
 	/* OBSERVERS - HANDLING */
 	function processResizeBatch() {
 		resizeRafScheduled = false;
+		resizeRafId = null;
 		resizeBatch.forEach((step) => {
 			disconnectStepObservers(step);
 			addStepObservers(step, isProgress);
@@ -161,7 +167,7 @@ function scrolleo() {
 		// Schedule batch processing if not already scheduled
 		if (resizeBatch.size > 0 && !resizeRafScheduled) {
 			resizeRafScheduled = true;
-			requestAnimationFrame(processResizeBatch);
+			resizeRafId = requestAnimationFrame(processResizeBatch);
 		}
 	}
 
@@ -307,6 +313,8 @@ function scrolleo() {
 	};
 
 	S.destroy = () => {
+		if (rafId) cancelAnimationFrame(rafId);
+		if (resizeRafId) cancelAnimationFrame(resizeRafId);
 		handleEnable(false);
 		reset();
 		removeScrollListener(containerElement);
