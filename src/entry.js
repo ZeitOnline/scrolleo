@@ -6,7 +6,6 @@ import getIndex, { setIndex } from './getIndex';
 import createProgressThreshold from './createProgressThreshold';
 import parseOffset from './parseOffset';
 import indexSteps from './indexSteps';
-import getOffsetTop from './getOffsetTop';
 import {
 	addScrollListener,
 	getDirection,
@@ -261,21 +260,15 @@ function scrolleo() {
 	}) => {
 		addScrollListener(container);
 
-		// Batch layout reads to reduce layout thrashing
 		const nodes = selectAll(step, parent);
-		const layoutData = nodes.map((node) => ({
-			height: node.offsetHeight,
-			top: getOffsetTop(node),
-		}));
 
 		steps = nodes.map((node, index) => ({
 			index,
 			direction: undefined,
-			height: layoutData[index].height,
+			height: node.offsetHeight,
 			node,
 			observers: {},
 			offset: parseOffset(node.dataset.offset),
-			top: layoutData[index].top,
 			progress: 0,
 			state: undefined,
 		}));
