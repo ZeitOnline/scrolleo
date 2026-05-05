@@ -187,9 +187,7 @@ function scrolleo() {
 
 	/*  OBSERVERS - CREATION */
 	function disconnectStepObservers({ observers }) {
-		Object.keys(observers).map((name) => {
-			observers[name].disconnect();
-		});
+		Object.values(observers).forEach((observer) => observer.disconnect());
 	}
 
 	function disconnectAllObservers() {
