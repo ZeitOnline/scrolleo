@@ -120,7 +120,7 @@ function scrolleo() {
 		if (isTriggerOnce) exclude[index] = true;
 	}
 
-	function notifyStepExit(element, check = true) {
+	function notifyStepExit(element) {
 		const index = getIndex(element);
 		const step = steps[index];
 
