@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.5](https://github.com/ZeitOnline/scrolleo/compare/v1.0.4...v1.0.5) (2026-05-08)
+
+
+### Bug Fixes
+
+* remove unused check parameter from notifyStepExit ([6039453](https://github.com/ZeitOnline/scrolleo/commit/6039453d257df4231dfb81046f1dba77f543b735))
+* use Object.values/forEach in disconnectStepObservers ([0d33dd0](https://github.com/ZeitOnline/scrolleo/commit/0d33dd0cc8f7d2395033a4798256b89cd5722fef))
+
+
+### Performance Improvements
+
+* remove unused step.top layout read ([67227f9](https://github.com/ZeitOnline/scrolleo/commit/67227f92d14d51084dd9e8a9747b242e0fa3b6bc))
+* store and cancel rAF handles on destroy ([3111d79](https://github.com/ZeitOnline/scrolleo/commit/3111d794d29b8b1d44f1563961df9919d424b5fb))
+* use ResizeObserver entry size instead of offsetHeight ([16eeb2a](https://github.com/ZeitOnline/scrolleo/commit/16eeb2a171a9ccccb98f705d651998268d91126c))
+
 ## [1.0.4](https://github.com/ZeitOnline/scrolleo/compare/v1.0.3...v1.0.4) (2026-01-20)
 
 
