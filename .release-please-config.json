@@ -10,16 +10,16 @@
 		}
 	},
   "changelog-sections": [
-		{ "type": "feat", "section": "🚀 Features" },
-		{ "type": "fix", "section": "🐛 Bug Fixes" },
-		{ "type": "build", "section": "📝 Other Changes" },
-		{ "type": "chore", "section": "📝 Other Changes" },
-		{ "type": "ci", "section": "📝 Other Changes" },
-		{ "type": "docs", "section": "📝 Other Changes" },
-		{ "type": "perf", "section": "📝 Other Changes" },
-		{ "type": "refactor", "section": "📝 Other Changes" },
-		{ "type": "revert", "section": "📝 Other Changes" },
-		{ "type": "style", "section": "📝 Other Changes" },
-		{ "type": "test", "section": "📝 Other Changes" }
+		{ "type": "feat", "section": "Features" },
+		{ "type": "fix", "section": "Bug Fixes" },
+		{ "type": "perf", "section": "Performance Improvements" },
+		{ "type": "revert", "section": "Reverts" },
+		{ "type": "docs", "section": "Documentation", "hidden": true },
+		{ "type": "chore", "section": "Miscellaneous", "hidden": true },
+		{ "type": "build", "section": "Miscellaneous", "hidden": true },
+		{ "type": "ci", "section": "Miscellaneous", "hidden": true },
+		{ "type": "style", "section": "Miscellaneous", "hidden": true },
+		{ "type": "refactor", "section": "Miscellaneous", "hidden": true },
+		{ "type": "test", "section": "Miscellaneous", "hidden": true }
 	]
 }
