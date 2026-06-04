@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:earlyMondays"],
+  "dependencyDashboard": true,
+  "commitMessagePrefix": "chore(deps): ",
+  "enabledManagers": [
+    "github-actions",
+    "npm",
+    "nvm"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "separateMultipleMajor": true
+    },
+    {
+      "groupName": "All minor npm changes",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchManagers": ["github-actions", "npm", "nvm"],
+      "addLabels": ["editorial-squad"]
+    },
+    {
+      "matchManagers": ["nvm"],
+      "matchFileNames": [".nvmrc"],
+      "groupName": "Node.js Version",
+      "pinDigests": true
+    }
+  ]
+}
