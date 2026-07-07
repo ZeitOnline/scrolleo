@@ -1,206 +1,243 @@
-function se(t, n = document) {
-  return typeof t == "string" ? Array.from(n.querySelectorAll(t)) : t instanceof Element ? [t] : t instanceof NodeList ? Array.from(t) : t instanceof Array ? t : [];
+//#region src/dom.js
+function e(e, t = document) {
+	return typeof e == "string" ? Array.from(t.querySelectorAll(e)) : e instanceof Element ? [e] : e instanceof NodeList ? Array.from(e) : e instanceof Array ? e : [];
 }
-let p = null;
-function ie() {
-  const t = document.createElement("div");
-  t.className = "scrollama__debug-step", t.style.position = "fixed", t.style.left = "0", t.style.width = "100%", t.style.zIndex = "9999", t.style.borderTop = "2px solid black", t.style.borderBottom = "2px solid black";
-  const n = document.createElement("p");
-  return n.style.position = "absolute", n.style.left = "0", n.style.height = "1px", n.style.width = "100%", n.style.borderTop = "1px dashed black", t.appendChild(n), document.body.appendChild(t), t;
+//#endregion
+//#region src/debug.js
+var t = null;
+function n() {
+	let e = document.createElement("div");
+	e.className = "scrollama__debug-step", e.style.position = "fixed", e.style.left = "0", e.style.width = "100%", e.style.zIndex = "9999", e.style.borderTop = "2px solid black", e.style.borderBottom = "2px solid black";
+	let t = document.createElement("p");
+	return t.style.position = "absolute", t.style.left = "0", t.style.height = "1px", t.style.width = "100%", t.style.borderTop = "1px dashed black", e.appendChild(t), document.body.appendChild(e), e;
 }
-function ce({ id: t, step: n, marginTop: r }) {
-  const { height: a } = n;
-  p || (p = ie()), p.style.top = `${r * -1}px`, p.style.height = `${a}px`, p.querySelector("p").style.top = `${a / 2}px`;
+function r({ id: e, step: r, marginTop: i }) {
+	let { height: a } = r;
+	t ||= n(), t.style.top = `${i * -1}px`, t.style.height = `${a}px`, t.querySelector("p").style.top = `${a / 2}px`;
 }
-function _() {
-  p && (p.remove(), p = null);
+function i() {
+	t &&= (t.remove(), null);
 }
-function le() {
-  const t = "abcdefghijklmnopqrstuvwxyz", n = Date.now(), r = [];
-  for (let a = 0; a < 6; a += 1) {
-    const u = t[Math.floor(Math.random() * t.length)];
-    r.push(u);
-  }
-  return `${r.join("")}${n}`;
+//#endregion
+//#region src/generateId.js
+function a() {
+	let e = Date.now(), t = [];
+	for (let e = 0; e < 6; e += 1) {
+		let e = "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+		t.push(e);
+	}
+	return `${t.join("")}${e}`;
 }
-function A(t) {
-  console.error(`scrollama error: ${t}`);
+//#endregion
+//#region src/err.js
+function o(e) {
+	console.error(`scrollama error: ${e}`);
 }
-const G = /* @__PURE__ */ new WeakMap();
-function ae(t, n) {
-  G.set(t, n);
+//#endregion
+//#region src/getIndex.js
+var s = /* @__PURE__ */ new WeakMap();
+function c(e, t) {
+	s.set(e, t);
 }
-function w(t) {
-  return G.get(t);
+function l(e) {
+	return s.get(e);
 }
-function fe(t, n) {
-  const r = Math.ceil(t / n), a = [], u = 1 / r;
-  for (let g = 0; g < r + 1; g += 1)
-    a.push(g * u);
-  return a;
+//#endregion
+//#region src/createProgressThreshold.js
+function u(e, t) {
+	let n = Math.ceil(e / t), r = [], i = 1 / n;
+	for (let e = 0; e < n + 1; e += 1) r.push(e * i);
+	return r;
 }
-function R(t) {
-  if (typeof t == "string" && t.indexOf("px") > 0) {
-    const n = +t.replace("px", "");
-    return isNaN(n) ? (err("offset value must be in 'px' format. Fallback to 0.5."), { format: "percent", value: 0.5 }) : { format: "pixels", value: n };
-  } else if (typeof t == "number" || !isNaN(+t))
-    return t > 1 && err("offset value is greater than 1. Fallback to 1."), t < 0 && err("offset value is lower than 0. Fallback to 0."), { format: "percent", value: Math.min(Math.max(0, t), 1) };
-  return null;
+//#endregion
+//#region src/parseOffset.js
+function d(e) {
+	if (typeof e == "string" && e.indexOf("px") > 0) {
+		let t = +e.replace("px", "");
+		return isNaN(t) ? (err("offset value must be in 'px' format. Fallback to 0.5."), {
+			format: "percent",
+			value: .5
+		}) : {
+			format: "pixels",
+			value: t
+		};
+	} else if (typeof e == "number" || !isNaN(+e)) return e > 1 && err("offset value is greater than 1. Fallback to 1."), e < 0 && err("offset value is lower than 0. Fallback to 0."), {
+		format: "percent",
+		value: Math.min(Math.max(0, e), 1)
+	};
+	return null;
 }
-function ue(t) {
-  t.forEach((n) => ae(n.node, n.index));
+//#endregion
+//#region src/indexSteps.js
+function f(e) {
+	e.forEach((e) => c(e.node, e.index));
 }
-const h = /* @__PURE__ */ new WeakMap();
-function J(t) {
-  return t === window ? window.scrollY : t.scrollTop;
+//#endregion
+//#region src/scroll.js
+var p = /* @__PURE__ */ new WeakMap();
+function m(e) {
+	return e === window ? window.scrollY : e.scrollTop;
 }
-function de(t) {
-  const n = h.get(t);
-  if (!n) return;
-  const r = J(t);
-  n.previousScrollY !== r && (r > n.previousScrollY ? n.direction = "down" : r < n.previousScrollY && (n.direction = "up"), n.previousScrollY = r);
+function h(e) {
+	let t = p.get(e);
+	if (!t) return;
+	let n = m(e);
+	t.previousScrollY !== n && (n > t.previousScrollY ? t.direction = "down" : n < t.previousScrollY && (t.direction = "up"), t.previousScrollY = n);
 }
-function B(t) {
-  const n = t || window, r = h.get(n);
-  return r ? r.direction : "down";
+function g(e) {
+	let t = e || window, n = p.get(t);
+	return n ? n.direction : "down";
 }
-function pe(t) {
-  const n = t || window;
-  if (h.has(n)) {
-    const a = h.get(n);
-    a.count += 1;
-    return;
-  }
-  const r = () => de(n);
-  h.set(n, {
-    listener: r,
-    previousScrollY: J(n),
-    direction: "down",
-    count: 1
-  }), n.addEventListener("scroll", r, { passive: !0 });
+function _(e) {
+	let t = e || window;
+	if (p.has(t)) {
+		let e = p.get(t);
+		e.count += 1;
+		return;
+	}
+	let n = () => h(t);
+	p.set(t, {
+		listener: n,
+		previousScrollY: m(t),
+		direction: "down",
+		count: 1
+	}), t.addEventListener("scroll", n, { passive: !0 });
 }
-function he(t) {
-  const n = t || window;
-  if (h.has(n)) {
-    const r = h.get(n);
-    r.count -= 1, r.count === 0 && (n.removeEventListener("scroll", r.listener), h.delete(n));
-  }
+function v(e) {
+	let t = e || window;
+	if (p.has(t)) {
+		let e = p.get(t);
+		--e.count, e.count === 0 && (t.removeEventListener("scroll", e.listener), p.delete(t));
+	}
 }
-function ge() {
-  let t = {}, n = le(), r = [], a, u, g, y, N = 0, q = !1, E = !1, O = !1, C = !1, T = [], z = /* @__PURE__ */ new Map(), M = !1, v = null, m = /* @__PURE__ */ new Set(), k = !1, x = null;
-  function L() {
-    t = {
-      stepEnter: () => {
-      },
-      stepExit: () => {
-      },
-      stepProgress: () => {
-      }
-    }, T = [], z.clear(), M = !1, v = null, m.clear(), k = !1, x = null;
-  }
-  function I(e) {
-    e && !q && D(), !e && q && H(), q = e;
-  }
-  function K() {
-    M = !1, v = null, z.forEach(
-      ({ element: e, index: o, progress: s, direction: i, step: c }) => {
-        if (c.progress = s, c.state === "enter") {
-          const f = { element: e, index: o, progress: s, direction: i };
-          t.stepProgress(f);
-        }
-      }
-    ), z.clear();
-  }
-  function Q(e, o) {
-    const s = w(e), i = r[s], c = B(u);
-    z.set(s, {
-      element: e,
-      index: s,
-      progress: o,
-      direction: c,
-      step: i
-    }), M || (M = !0, v = requestAnimationFrame(K));
-  }
-  function Y(e, o) {
-    o !== void 0 && Q(e, o);
-  }
-  function U(e) {
-    const o = w(e), s = r[o], i = B(u), c = { element: e, index: o, direction: i };
-    s.direction = i, s.state = "enter", T[o] || t.stepEnter(c), C && (T[o] = !0);
-  }
-  function V(e) {
-    const o = w(e), s = r[o];
-    if (!s.state) return !1;
-    const i = B(u), c = { element: e, index: o, direction: i };
-    E && (i === "down" && s.progress < 1 ? Y(e, 1) : i === "up" && s.progress > 0 && Y(e, 0)), s.direction = i, s.state = "exit", t.stepExit(c);
-  }
-  function X() {
-    k = !1, x = null, m.forEach((e) => {
-      j(e), W(e, E);
-    }), m.clear();
-  }
-  function Z(e) {
-    e.forEach((o) => {
-      const s = w(o.target), i = r[s], c = Math.round(
-        o.borderBoxSize?.[0]?.blockSize ?? o.contentRect.height
-      );
-      c !== i.height && (i.height = c, m.add(i));
-    }), m.size > 0 && !k && (k = !0, x = requestAnimationFrame(X));
-  }
-  function ee([e]) {
-    const { isIntersecting: o, target: s } = e;
-    o ? U(s) : V(s);
-  }
-  function te([e]) {
-    const o = w(e.target), s = r[o], { isIntersecting: i, intersectionRatio: c, target: f } = e;
-    i && s.state === "enter" && Y(f, c);
-  }
-  function j({ observers: e }) {
-    Object.values(e).forEach((o) => o.disconnect());
-  }
-  function H() {
-    r.forEach(j), y && y.disconnect();
-  }
-  function ne() {
-    y = new ResizeObserver(Z), r.forEach((e) => y.observe(e.node));
-  }
-  function W(e, o) {
-    re(e), o && oe(e);
-  }
-  function re(e) {
-    const o = window.innerHeight, s = e.offset || a, i = s.format === "pixels" ? 1 : o, c = s.value * i, f = e.height / 2 - c, b = e.height / 2 - (o - c), d = { rootMargin: `${f}px 0px ${b}px 0px`, threshold: 0.5, root: g }, $ = new IntersectionObserver(ee, d);
-    $.observe(e.node), e.observers.step = $, O && ce({ id: n, step: e, marginTop: f });
-  }
-  function oe(e) {
-    const o = window.innerHeight, s = e.offset || a, i = s.format === "pixels" ? 1 : o, c = s.value * i, f = -c + e.height, b = c - o, S = `${f}px 0px ${b}px 0px`, P = fe(e.height, N), F = { rootMargin: S, threshold: P }, d = new IntersectionObserver(te, F);
-    d.observe(e.node), e.observers.progress = d;
-  }
-  function D() {
-    H(), ne(), r.forEach((e) => W(e, E));
-  }
-  const l = {};
-  return l.setup = ({
-    step: e,
-    parent: o,
-    offset: s = 0.5,
-    threshold: i = 4,
-    progress: c = !1,
-    once: f = !1,
-    debug: b = !1,
-    container: S = void 0,
-    root: P = null
-  }) => (pe(S), r = se(e, o).map((d, $) => ({
-    index: $,
-    direction: void 0,
-    height: d.offsetHeight,
-    node: d,
-    observers: {},
-    offset: R(d.dataset.offset),
-    progress: 0,
-    state: void 0
-  })), r.length ? (E = c, C = f, O && !b && _(), O = b, N = Math.max(1, +i), a = R(s), u = S, g = P, L(), ue(r), I(!0), l) : (A("no step elements"), l)), l.enable = () => (I(!0), l), l.disable = () => (I(!1), l), l.destroy = () => (v && cancelAnimationFrame(v), x && cancelAnimationFrame(x), I(!1), L(), he(u), O && _(), r = [], l), l.resize = () => (D(), l), l.offset = (e) => e == null ? a.value : (a = R(e), D(), l), l.onStepEnter = (e) => (typeof e == "function" ? t.stepEnter = e : A("onStepEnter requires a function"), l), l.onStepExit = (e) => (typeof e == "function" ? t.stepExit = e : A("onStepExit requires a function"), l), l.onStepProgress = (e) => (typeof e == "function" ? t.stepProgress = e : A("onStepProgress requires a function"), l), l;
+//#endregion
+//#region src/entry.js
+function y() {
+	let t = {}, n = a(), s = [], c, p, m, h, y = 0, b = !1, x = !1, S = !1, C = !1, w = [], T = /* @__PURE__ */ new Map(), E = !1, D = null, O = /* @__PURE__ */ new Set(), k = !1, A = null;
+	function j() {
+		t = {
+			stepEnter: () => {},
+			stepExit: () => {},
+			stepProgress: () => {}
+		}, w = [], T.clear(), E = !1, D = null, O.clear(), k = !1, A = null;
+	}
+	function M(e) {
+		e && !b && J(), !e && b && U(), b = e;
+	}
+	function N() {
+		E = !1, D = null, T.forEach(({ element: e, index: n, progress: r, direction: i, step: a }) => {
+			if (a.progress = r, a.state === "enter") {
+				let a = {
+					element: e,
+					index: n,
+					progress: r,
+					direction: i
+				};
+				t.stepProgress(a);
+			}
+		}), T.clear();
+	}
+	function P(e, t) {
+		let n = l(e), r = s[n], i = g(p);
+		T.set(n, {
+			element: e,
+			index: n,
+			progress: t,
+			direction: i,
+			step: r
+		}), E || (E = !0, D = requestAnimationFrame(N));
+	}
+	function F(e, t) {
+		t !== void 0 && P(e, t);
+	}
+	function I(e) {
+		let n = l(e), r = s[n], i = g(p), a = {
+			element: e,
+			index: n,
+			direction: i
+		};
+		r.direction = i, r.state = "enter", w[n] || t.stepEnter(a), C && (w[n] = !0);
+	}
+	function L(e) {
+		let n = l(e), r = s[n];
+		if (!r.state) return !1;
+		let i = g(p), a = {
+			element: e,
+			index: n,
+			direction: i
+		};
+		x && (i === "down" && r.progress < 1 ? F(e, 1) : i === "up" && r.progress > 0 && F(e, 0)), r.direction = i, r.state = "exit", t.stepExit(a);
+	}
+	function R() {
+		k = !1, A = null, O.forEach((e) => {
+			H(e), G(e, x);
+		}), O.clear();
+	}
+	function z(e) {
+		e.forEach((e) => {
+			let t = l(e.target), n = s[t], r = Math.round(e.borderBoxSize?.[0]?.blockSize ?? e.contentRect.height);
+			r !== n.height && (n.height = r, O.add(n));
+		}), O.size > 0 && !k && (k = !0, A = requestAnimationFrame(R));
+	}
+	function B([e]) {
+		let { isIntersecting: t, target: n } = e;
+		t ? I(n) : L(n);
+	}
+	function V([e]) {
+		let t = l(e.target), n = s[t], { isIntersecting: r, intersectionRatio: i, target: a } = e;
+		r && n.state === "enter" && F(a, i);
+	}
+	function H({ observers: e }) {
+		Object.values(e).forEach((e) => e.disconnect());
+	}
+	function U() {
+		s.forEach(H), h && h.disconnect();
+	}
+	function W() {
+		h = new ResizeObserver(z), s.forEach((e) => h.observe(e.node));
+	}
+	function G(e, t) {
+		K(e), t && q(e);
+	}
+	function K(e) {
+		let t = window.innerHeight, i = e.offset || c, a = i.format === "pixels" ? 1 : t, o = i.value * a, s = e.height / 2 - o, l = e.height / 2 - (t - o), u = {
+			rootMargin: `${s}px 0px ${l}px 0px`,
+			threshold: .5,
+			root: m
+		}, d = new IntersectionObserver(B, u);
+		d.observe(e.node), e.observers.step = d, S && r({
+			id: n,
+			step: e,
+			marginTop: s,
+			marginBottom: l
+		});
+	}
+	function q(e) {
+		let t = window.innerHeight, n = e.offset || c, r = n.format === "pixels" ? 1 : t, i = n.value * r, a = {
+			rootMargin: `${-i + e.height}px 0px ${i - t}px 0px`,
+			threshold: u(e.height, y)
+		}, o = new IntersectionObserver(V, a);
+		o.observe(e.node), e.observers.progress = o;
+	}
+	function J() {
+		U(), W(), s.forEach((e) => G(e, x));
+	}
+	let Y = {};
+	return Y.setup = ({ step: t, parent: n, offset: r = .5, threshold: a = 4, progress: l = !1, once: u = !1, debug: h = !1, container: g = void 0, root: v = null }) => (_(g), s = e(t, n).map((e, t) => ({
+		index: t,
+		direction: void 0,
+		height: e.offsetHeight,
+		node: e,
+		observers: {},
+		offset: d(e.dataset.offset),
+		progress: 0,
+		state: void 0
+	})), s.length ? (x = l, C = u, S && !h && i(), S = h, y = Math.max(1, +a), c = d(r), p = g, m = v, j(), f(s), M(!0), Y) : (o("no step elements"), Y)), Y.enable = () => (M(!0), Y), Y.disable = () => (M(!1), Y), Y.destroy = () => (D && cancelAnimationFrame(D), A && cancelAnimationFrame(A), M(!1), j(), v(p), S && i(), s = [], Y), Y.resize = () => (J(), Y), Y.offset = (e) => e == null ? c.value : (c = d(e), J(), Y), Y.onStepEnter = (e) => (typeof e == "function" ? t.stepEnter = e : o("onStepEnter requires a function"), Y), Y.onStepExit = (e) => (typeof e == "function" ? t.stepExit = e : o("onStepExit requires a function"), Y), Y.onStepProgress = (e) => (typeof e == "function" ? t.stepProgress = e : o("onStepProgress requires a function"), Y), Y;
 }
-export {
-  ge as default
-};
+//#endregion
+//#region index.js
+var b = y;
+//#endregion
+export { b as default };
+
 //# sourceMappingURL=scrolleo.js.map
