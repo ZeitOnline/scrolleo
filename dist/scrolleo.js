@@ -61,11 +61,11 @@ function d(e) {
 			format: "pixels",
 			value: t
 		};
-	} else if (typeof e == "number" || !isNaN(+e)) return e > 1 && err("offset value is greater than 1. Fallback to 1."), e < 0 && err("offset value is lower than 0. Fallback to 0."), {
+	}
+	return typeof e == "number" || !isNaN(+e) ? (e > 1 && err("offset value is greater than 1. Fallback to 1."), e < 0 && err("offset value is lower than 0. Fallback to 0."), {
 		format: "percent",
 		value: Math.min(Math.max(0, e), 1)
-	};
-	return null;
+	}) : null;
 }
 //#endregion
 //#region src/indexSteps.js
