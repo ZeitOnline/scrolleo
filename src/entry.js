@@ -180,11 +180,8 @@ function scrolleo() {
 	}
 
 	function intersectProgress([entry]) {
-		const index = getIndex(entry.target);
-		const step = steps[index];
 		const { isIntersecting, intersectionRatio, target } = entry;
-		if (isIntersecting && step.state === 'enter')
-			notifyProgress(target, intersectionRatio);
+		if (isIntersecting) notifyProgress(target, intersectionRatio);
 	}
 
 	/*  OBSERVERS - CREATION */
