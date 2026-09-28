@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/ZeitOnline/scrolleo/compare/v1.0.5...v1.0.6) (2026-09-28)
+
+
+### Bug Fixes
+
+* keep progress reported before the step observer fires ([#19](https://github.com/ZeitOnline/scrolleo/issues/19)) ([cfb4bac](https://github.com/ZeitOnline/scrolleo/commit/cfb4bac907f8f8d880e8bc003edeea754e46e939))
+
 ## [1.0.5](https://github.com/ZeitOnline/scrolleo/compare/v1.0.4...v1.0.5) (2026-05-08)
 
 
