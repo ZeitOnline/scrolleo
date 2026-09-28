@@ -184,8 +184,8 @@ function y() {
 		t ? I(n) : L(n);
 	}
 	function V([e]) {
-		let t = l(e.target), n = s[t], { isIntersecting: r, intersectionRatio: i, target: a } = e;
-		r && n.state === "enter" && F(a, i);
+		let { isIntersecting: t, intersectionRatio: n, target: r } = e;
+		t && F(r, n);
 	}
 	function H({ observers: e }) {
 		Object.values(e).forEach((e) => e.disconnect());
