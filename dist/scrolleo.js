@@ -1,9 +1,8 @@
-//#region src/dom.js
+// src/dom.js
 function e(e, t = document) {
 	return typeof e == "string" ? Array.from(t.querySelectorAll(e)) : e instanceof Element ? [e] : e instanceof NodeList ? Array.from(e) : e instanceof Array ? e : [];
 }
-//#endregion
-//#region src/debug.js
+// src/debug.js
 var t = null;
 function n() {
 	let e = document.createElement("div");
@@ -18,8 +17,7 @@ function r({ id: e, step: r, marginTop: i }) {
 function i() {
 	t &&= (t.remove(), null);
 }
-//#endregion
-//#region src/generateId.js
+// src/generateId.js
 function a() {
 	let e = Date.now(), t = [];
 	for (let e = 0; e < 6; e += 1) {
@@ -28,13 +26,11 @@ function a() {
 	}
 	return `${t.join("")}${e}`;
 }
-//#endregion
-//#region src/err.js
+// src/err.js
 function o(e) {
 	console.error(`scrollama error: ${e}`);
 }
-//#endregion
-//#region src/getIndex.js
+// src/getIndex.js
 var s = /* @__PURE__ */ new WeakMap();
 function c(e, t) {
 	s.set(e, t);
@@ -42,15 +38,13 @@ function c(e, t) {
 function l(e) {
 	return s.get(e);
 }
-//#endregion
-//#region src/createProgressThreshold.js
+// src/createProgressThreshold.js
 function u(e, t) {
 	let n = Math.ceil(e / t), r = [], i = 1 / n;
 	for (let e = 0; e < n + 1; e += 1) r.push(e * i);
 	return r;
 }
-//#endregion
-//#region src/parseOffset.js
+// src/parseOffset.js
 function d(e) {
 	if (typeof e == "string" && e.indexOf("px") > 0) {
 		let t = +e.replace("px", "");
@@ -67,13 +61,11 @@ function d(e) {
 		value: Math.min(Math.max(0, e), 1)
 	}) : null;
 }
-//#endregion
-//#region src/indexSteps.js
+// src/indexSteps.js
 function f(e) {
 	e.forEach((e) => c(e.node, e.index));
 }
-//#endregion
-//#region src/scroll.js
+// src/scroll.js
 var p = /* @__PURE__ */ new WeakMap();
 function m(e) {
 	return e === window ? window.scrollY : e.scrollTop;
@@ -110,8 +102,7 @@ function v(e) {
 		--e.count, e.count === 0 && (t.removeEventListener("scroll", e.listener), p.delete(t));
 	}
 }
-//#endregion
-//#region src/entry.js
+// src/entry.js
 function y() {
 	let t = {}, n = a(), s = [], c, p, m, h, y = 0, b = !1, x = !1, S = !1, C = !1, w = [], T = /* @__PURE__ */ new Map(), E = !1, D = null, O = /* @__PURE__ */ new Set(), k = !1, A = null;
 	function j() {
@@ -234,10 +225,8 @@ function y() {
 		state: void 0
 	})), s.length ? (x = l, C = u, S && !h && i(), S = h, y = Math.max(1, +a), c = d(r), p = g, m = v, j(), f(s), M(!0), Y) : (o("no step elements"), Y)), Y.enable = () => (M(!0), Y), Y.disable = () => (M(!1), Y), Y.destroy = () => (D && cancelAnimationFrame(D), A && cancelAnimationFrame(A), M(!1), j(), v(p), S && i(), s = [], Y), Y.resize = () => (J(), Y), Y.offset = (e) => e == null ? c.value : (c = d(e), J(), Y), Y.onStepEnter = (e) => (typeof e == "function" ? t.stepEnter = e : o("onStepEnter requires a function"), Y), Y.onStepExit = (e) => (typeof e == "function" ? t.stepExit = e : o("onStepExit requires a function"), Y), Y.onStepProgress = (e) => (typeof e == "function" ? t.stepProgress = e : o("onStepProgress requires a function"), Y), Y;
 }
-//#endregion
-//#region index.js
+// index.js
 var b = y;
-//#endregion
 export { b as default };
 
 //# sourceMappingURL=scrolleo.js.map
